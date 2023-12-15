@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  backend:
+    restart: "always"
+    build: .
+    environment:
+      IP: 127.0.0.1
+    volumes:
+      - .:/jukwaa
+    command: bash -c "python manage.py runserver 0.0.0.0:8005"
+    container_name: jukwaa
+    image: jukwaa
+    ports:
+      - "8005:8005"
+    networks:
+      - webnet
+networks:
+  webnet:
