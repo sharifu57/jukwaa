@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 from pathlib import Path
+from datetime import datetime, timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ BASE_URL = "https://2vjejl.api.infobip.com"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+HOST_IP = "192.168.96.1"
 ALLOWED_HOSTS = ['*']
 
 
@@ -41,10 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'djoser',
+    'phonenumbers',
     'django_otp',
+    'django_otp.plugins.otp_totp',
     'base',
     'rest_framework',
-    'django_extensions'
+    'django_extensions',
+    'rest_framework.authtoken'
     
 ]
 
@@ -58,6 +62,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_otp.middleware.OTPMiddleware'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 ROOT_URLCONF = 'jukwaa.urls'
 
@@ -86,11 +102,15 @@ WSGI_APPLICATION = 'jukwaa.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "jukwaa",
+            "USER": "jukwaa",
+            "PASSWORD": "jukwaa%100",
+            "HOST": HOST_IP,
+            "PORT": "5432",
+        }
     }
-}
 
 
 # Password validation
@@ -127,7 +147,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+if DEBUG:
+    MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "..", "jukwaa/static").replace(
+        "\\", "/"
+    )
+else:
+    MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "static").replace("\\", "/")
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
