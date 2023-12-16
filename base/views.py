@@ -21,6 +21,7 @@ from rest_framework.generics import CreateAPIView
 from base.models import Category
 from .serializers import RegisterSerializer
 from django.contrib.auth.models import User
+from django.conf import settings
 import random
 
 # Create your views here.
@@ -98,6 +99,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
 
             category_instance = Category.objects.get(pk=category)
             user_profile.category = category_instance
+            user_profile.save()
 
             # try:
             #     group_instance = Group.objects.get(id=role)
@@ -126,8 +128,31 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
             # sms_data = response.json()
 
             # end send sms to user
+            
+            channel = SMSChannel.from_auth_params(
+                {
+                    "base_url": settings.BASE_URL,
+                    "api_key": settings.API_KEY,
+                }
+            )
+            
+            sms_response = channel.send_sms_message(
+                {
+                    "messages": [
+                        {
+                            "destinations": [{"to": phone_number}],
+                            "text": "Hello, from Python SDK!",
+                        }
+                    ]
+                }
+            )
+            
+            # Get delivery reports for the message. It may take a few seconds show the just-sent message.
+            query_parameters = {"limit": 10}
+            delivery_reports = channel.get_outbound_sms_delivery_reports(query_parameters)
 
-            user_profile.save()
+            # See the delivery reports.
+            print(delivery_reports)
 
         except Exception as e:
             return Response(
@@ -137,7 +162,8 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         return Response(
             {
                 "status": status.HTTP_201_CREATED,
-                "message": "Successfully Created"
+                "message": "Successfully Created",
+                "sms": sms_response
                 # "data": sms_data,
             }
         )

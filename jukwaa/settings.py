@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!e5m9+1doxh(n_s^vo@ndal$@ua7ol&0(jrkg)u+*kc_h*wx0j'
+API_KEY = "6e45a45800b3fd96346d789e128f020d-2cb61693-cffd-4c4e-8eab-caac0eac2f51"
+BASE_URL = "https://2vjejl.api.infobip.com"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
