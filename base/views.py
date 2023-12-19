@@ -14,6 +14,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
+
 # from datetime import timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
@@ -33,10 +34,12 @@ import random
 
 # Create your views here.
 
+
 def get_random_number():
-    otp = random.randint(1000,9999)
+    otp = random.randint(1000, 9999)
     return otp
-    
+
+
 class UserRegisterViewSet(viewsets.GenericViewSet):
     serializer_class = RegisterSerializer
     queryset = User.objects.filter(is_active=True)
@@ -58,9 +61,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
                 }
             )
 
-        if User.objects.filter(
-            Q(first_name=first_name)
-        ).exists():
+        if User.objects.filter(Q(first_name=first_name)).exists():
             return Response(
                 {
                     "status": status.HTTP_409_CONFLICT,
@@ -86,9 +87,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         try:
             validate_password(password)
         except ValidationError as e:
-            return Response(
-                {"status": status.HTTP_400_BAD_REQUEST, "message": str(e)}
-            )
+            return Response({"status": status.HTTP_400_BAD_REQUEST, "message": str(e)})
 
         user = User.objects.create_user(
             username=username, email=email, password=password
@@ -134,14 +133,14 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         # sms_data = response.json()
 
         # end send sms to user
-        
+
         # channel = SMSChannel.from_auth_params(
         #     {
         #         "base_url": settings.BASE_URL,
         #         "api_key": settings.API_KEY,
         #     }
         # )
-        
+
         # sms_response = channel.send_sms_message(
         #     {
         #         "messages": [
@@ -152,88 +151,77 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         #         ]
         #     }
         # )
-        
+
         # Get delivery reports for the message. It may take a few seconds show the just-sent message.
         # query_parameters = {"limit": 10}
         # delivery_reports = channel.get_outbound_sms_delivery_reports(query_parameters)
 
         # # See the delivery reports.
         # print(delivery_reports)
-        
-       
-        
+
         return Response(
-            {
-                "status": status.HTTP_201_CREATED,
-                "message": "Successfully Created"
-            }
+            {"status": status.HTTP_201_CREATED, "message": "Successfully Created"}
         )
 
-    
+
 class UserLoginViewSet(viewsets.GenericViewSet):
     serializer_class = LoginSerializer
     queryset = Profile.objects.filter(user__is_active=True)
-    
-    @action(detail=False, methods=['POST'])
+
+    @action(detail=False, methods=["POST"])
     def login(self, request):
-        phone_number = request.data.get('phone_number')
+        phone_number = request.data.get("phone_number")
         otp = None
-        
+
         if phone_number:
             profile = Profile.objects.filter(
-                is_active=True, 
-                is_deleted=False, 
-                phone_number__iexact=phone_number
+                is_active=True, is_deleted=False, phone_number__iexact=phone_number
             ).first()
-            
+
             if profile is not None:
                 profile.otp = get_random_number()
                 otp = profile.otp
                 profile.otp_created_at = timezone.now()
                 profile.save()
-                
+
                 return Response(
-                    {
-                        'status': status.HTTP_200_OK,
-                        'message': 'success',
-                        'otp': otp
-                    }
+                    {"status": status.HTTP_200_OK, "message": "success", "otp": otp}
                 )
-            
+
             return Response(
                 {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    'message': 'No Profile found'
+                    "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    "message": "No Profile found",
                 }
             )
-        
+
         return Response(
-            {
-                'status': status.HTTP_400_BAD_REQUEST,
-                'message': 'No User Found'
-            }
+            {"status": status.HTTP_400_BAD_REQUEST, "message": "No User Found"}
         )
-            
+
 
 class UserVerificationViewSet(viewsets.GenericViewSet):
     serializer_class = LoginSerializer
     queryset = Profile.objects.filter(user__is_active=True)
-    
-    @action(detail=False, methods=['POST'])
+
+    @action(detail=False, methods=["POST"])
     def verification(self, request):
-        phone_number = request.data.get('phone_number')
-        otp = request.data.get('otp')
-        
+        phone_number = request.data.get("phone_number")
+        otp = request.data.get("otp")
+
         if phone_number and otp:
             profile = Profile.objects.filter(
-                phone_number__iexact=phone_number,
-                otp__iexact=otp
+                phone_number__iexact=phone_number, otp__iexact=otp
             ).first()
-            
-            if profile and profile.user is not None and profile.otp_created_at is not None:
+
+            if (
+                profile
+                and profile.user is not None
+                and profile.otp_created_at is not None
+            ):
                 expiration_time = profile.otp_created_at + timedelta(minutes=4)
                 current_time = timezone.now()
-                
+
                 if current_time <= expiration_time:
                     user = profile.user
                     # token, created = Token.objects.get_or_create(user=user)
@@ -241,50 +229,47 @@ class UserVerificationViewSet(viewsets.GenericViewSet):
                     serializer = LoginSerializer(user, many=False)
                     return Response(
                         {
-                            'status': status.HTTP_200_OK,
-                            'message': 'OTP Verified successfully',
-                            'data': serializer.data,
-                            'token': str(token.access_token),
-                            'refresh_token': str(token),
-                            'expires_at': str(token.access_token.lifetime)
+                            "status": status.HTTP_200_OK,
+                            "message": "OTP Verified successfully",
+                            "data": serializer.data,
+                            "token": str(token.access_token),
+                            "refresh_token": str(token),
+                            "expires_at": str(token.access_token.lifetime),
                         }
                     )
-                    
+
                 else:
                     return Response(
                         {
-                            'status': status.HTTP_400_BAD_REQUEST,
-                            'message': 'OTP has Expired'
+                            "status": status.HTTP_400_BAD_REQUEST,
+                            "message": "OTP has Expired",
                         }
                     )
-            
+
             return Response(
                 {
-                    'status': status.HTTP_400_BAD_REQUEST,
-                    'message': 'Failed to verify OTP'
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Failed to verify OTP",
                 }
             )
         return Response(
-            {
-                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                'message': 'Wrong inputs'
-            }
+            {"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Wrong inputs"}
         )
-        
+
 
 class RegenerateTokenViewSet(viewsets.GenericViewSet):
     serializer_class = LoginSerializer
     queryset = Profile.objects.filter(user__is_active=True)
-    
-    @action(detail=False, methods=['POST'])
+
+    @action(detail=False, methods=["POST"])
     def regenerate_otp(self, request):
-        phone_number = request.data.get('phone_number')
+        phone_number = request.data.get("phone_number")
 
         if phone_number:
             profile = Profile.objects.filter(
                 user__is_active=True,
                 is_deleted=False,
-                phone_number__iexact=phone_number
+                phone_number__iexact=phone_number,
             ).first()
 
             if profile is not None:
@@ -294,22 +279,29 @@ class RegenerateTokenViewSet(viewsets.GenericViewSet):
 
                 return Response(
                     {
-                        'status': status.HTTP_200_OK,
-                        'message': 'New OTP requested successfully',
-                        'otp': profile.otp
+                        "status": status.HTTP_200_OK,
+                        "message": "New OTP requested successfully",
+                        "otp": profile.otp,
                     }
                 )
             else:
                 return Response(
                     {
-                        'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                        'message': 'No Profile found'
+                        "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        "message": "No Profile found",
                     }
                 )
 
         return Response(
-            {
-                'status': status.HTTP_400_BAD_REQUEST,
-                'message': 'No User Found'
-            }
+            {"status": status.HTTP_400_BAD_REQUEST, "message": "No User Found"}
         )
+
+
+class CategoriesListAPIView(APIView):
+    def get(self, request):
+        categories = Category.objects.filter(is_active=True, is_deleted=False).order_by(
+            "name"
+        )
+
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
