@@ -52,6 +52,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         user_type = request.data.get("user_type")
         category = request.data.get("category")
         phone_number = request.data.get("phone_number")
+        is_accepted_term = request.data.get("is_accepted_term")
 
         if not email or not first_name or not last_name:
             return Response(
@@ -100,6 +101,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         user_profile, created = Profile.objects.get_or_create(user=user)
         user_profile.user_type = user_type
         user_profile.phone_number = phone_number
+        user_profile.is_accepted_term = True
         # user_profile.otp = get_random_number()
 
         category_instance = Category.objects.get(pk=category)
@@ -185,7 +187,12 @@ class UserLoginViewSet(viewsets.GenericViewSet):
                 profile.save()
 
                 return Response(
-                    {"status": status.HTTP_200_OK, "message": "success", "otp": otp}
+                    {
+                        "status": status.HTTP_200_OK,
+                        "message": "success",
+                        "otp": otp,
+                        "phone_number": phone_number,
+                    }
                 )
 
             return Response(
@@ -196,7 +203,10 @@ class UserLoginViewSet(viewsets.GenericViewSet):
             )
 
         return Response(
-            {"status": status.HTTP_400_BAD_REQUEST, "message": "No User Found"}
+            {
+                "status": status.HTTP_400_BAD_REQUEST,
+                "message": "Phone Number Does not Exist",
+            }
         )
 
 
@@ -263,7 +273,11 @@ class RegenerateTokenViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=["POST"])
     def regenerate_otp(self, request):
-        phone_number = request.data.get("phone_number")
+        data = request.data
+        if not isinstance(data, dict):
+            data = {"phone_number": str(data)}
+
+        phone_number = data.get("phone_number")
 
         if phone_number:
             profile = Profile.objects.filter(
@@ -280,7 +294,7 @@ class RegenerateTokenViewSet(viewsets.GenericViewSet):
                 return Response(
                     {
                         "status": status.HTTP_200_OK,
-                        "message": "New OTP requested successfully",
+                        "message": "New OTP Has Been sent",
                         "otp": profile.otp,
                     }
                 )
