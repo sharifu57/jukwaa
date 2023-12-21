@@ -25,6 +25,9 @@ SECRET_KEY = "django-insecure-!e5m9+1doxh(n_s^vo@ndal$@ua7ol&0(jrkg)u+*kc_h*wx0j
 API_KEY = "6e45a45800b3fd96346d789e128f020d-2cb61693-cffd-4c4e-8eab-caac0eac2f51"
 BASE_URL = "https://2vjejl.api.infobip.com"
 
+OTP_SECRET_KEY = "NzkyNDE0NDRiZDA3NmJmMDgwOGU0M2MzNzYzNzIyZDM3ZDk2YzBlZTMwNDkwMTkxYjYxYjllMWIxMWYwY2Q2Mw=="
+OTP_API_KEY = "68c9d2854d3ffcbb"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 HOST_IP = "192.168.96.1"

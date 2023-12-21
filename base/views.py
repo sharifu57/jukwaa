@@ -31,6 +31,9 @@ from .serializers import *
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
 import random
+import base64
+import json
+import jwt
 
 # Create your views here.
 
@@ -121,45 +124,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         # group_instance.user_set.add(user)
         # send sms to the user
 
-        # sms_url = (
-        #     "https://imis.nictanzania.co.tz/production/communication/sms_send/"
-        # )
-        # sms_params = {
-        #     "recipients": phone_number,
-        #     "message": f"Welcome to Intern Performance System, your username is:{username}, and password is:{password}",
-        #     "customer_name": "",
-        #     "module": "InternMS",
-        #     "category": 0,
-        # }
-        # response = requests.post(url=sms_url, data=sms_params)
-        # sms_data = response.json()
-
         # end send sms to user
-
-        # channel = SMSChannel.from_auth_params(
-        #     {
-        #         "base_url": settings.BASE_URL,
-        #         "api_key": settings.API_KEY,
-        #     }
-        # )
-
-        # sms_response = channel.send_sms_message(
-        #     {
-        #         "messages": [
-        #             {
-        #                 "destinations": [{"to": phone_number}],
-        #                 "text": "Hello, from Python SDK!",
-        #             }
-        #         ]
-        #     }
-        # )
-
-        # Get delivery reports for the message. It may take a few seconds show the just-sent message.
-        # query_parameters = {"limit": 10}
-        # delivery_reports = channel.get_outbound_sms_delivery_reports(query_parameters)
-
-        # # See the delivery reports.
-        # print(delivery_reports)
 
         return Response(
             {"status": status.HTTP_201_CREATED, "message": "Successfully Created"}
@@ -186,12 +151,38 @@ class UserLoginViewSet(viewsets.GenericViewSet):
                 profile.otp_created_at = timezone.now()
                 profile.save()
 
+                sms_url = "https://apiotp.beem.africa/v1/request"
+                api_key = settings.OTP_API_KEY  # Replace with your actual API key
+                secret_key = (
+                    settings.OTP_SECRET_KEY
+                )  # Replace with your actual secret key
+
+                auth_str = f"{api_key}:{secret_key}"
+                auth_bytes = base64.b64encode(auth_str.encode("utf-8"))
+                auth_str_encoded = auth_bytes.decode("utf-8")
+
+                headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": f"Basic {auth_str_encoded}",
+                }
+
+                sms_params = {"appId": 1, "msisdn": phone_number}
+                response = requests.post(url=sms_url, json=sms_params, headers=headers)
+
+                try:
+                    sms_data = response.json()
+                except ValueError as e:
+                    # Handle the case where the response is not valid JSON
+                    print(f"Error parsing JSON: {e}")
+                    sms_data = {"error": "Invalid JSON response"}
+
                 return Response(
                     {
                         "status": status.HTTP_200_OK,
                         "message": "success",
                         "otp": otp,
                         "phone_number": phone_number,
+                        "sms_response": sms_data,
                     }
                 )
 
