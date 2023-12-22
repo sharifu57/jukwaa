@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django_otp",
     "django_otp.plugins.otp_totp",
     "base",
+    "backend",
     "rest_framework",
     "django_extensions",
     "rest_framework.authtoken",

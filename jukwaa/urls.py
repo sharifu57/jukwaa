@@ -25,7 +25,7 @@ from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Jukwaa Documentation",
-        default_version='v1',
+        default_version="v1",
         description="Just a simple documentation",
         terms_of_service="https://www.example.com/terms/",
         contact=openapi.Contact(email="sharifumajid3@gmail.com"),
@@ -36,11 +36,17 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('API/V1/', include("base.urls")),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path("admin/", admin.site.urls),
+    path("API/V1/", include("base.urls")),
+    path("API/V1/", include("backend.urls")),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("docs/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
 from django.conf.urls.static import static
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
