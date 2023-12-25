@@ -310,3 +310,18 @@ class CategoriesListAPIView(APIView):
 
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
+
+
+class SkillsListAPIView(APIView):
+    def get(self, request, category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            return Response({"status": 400, "message": "No Category"})
+
+        skills = Skill.objects.filter(
+            category=category, is_active=True, is_deleted=False
+        )
+
+        serializer = SkillSerializer(skills, many=True)
+        return Response(serializer.data)

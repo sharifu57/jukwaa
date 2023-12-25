@@ -28,7 +28,7 @@ class PostProjectAPIView(APIView):
             title = data.get("title")
             description = data.get("description")
             category = data.get("category")
-            skill = data.get("skill")
+            skills = data.get("skills", [])
             duration = data.get("duration")
             created_by = data.get("created_by")
             currency = data.get("currency")
@@ -38,14 +38,14 @@ class PostProjectAPIView(APIView):
             project_file = data.get("project_file")
 
             category_instance = Category.objects.get(id=category)
-            skill_instance = Skill.objects.get(id=skill)
+            skills_instance = Skill.objects.filter(id__in=skills)
+            print("==============skills instance", skills_instance)
             user_instance = User.objects.get(id=created_by)
 
             project = Project.objects.create(
                 title=title,
                 description=description,
                 category=category_instance,
-                skill=skill_instance,
                 duration=duration,
                 created_by=user_instance,
                 currency=currency,
@@ -55,6 +55,7 @@ class PostProjectAPIView(APIView):
                 project_file=project_file,
             )
 
+            project.skills.set(skills_instance)
             project.save()
             serializer = ProjectSerializer(project)
             return Response(

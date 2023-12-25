@@ -19,7 +19,7 @@ class Project(BaseModel):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True
     )
-    skill = models.ForeignKey(Skill, on_delete=models.SET_NULL, blank=True, null=True)
+    skills = models.ManyToManyField(Skill, blank=True, null=True)
     duration = models.IntegerField(choices=PROJECT_DURATION, null=True, blank=True)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
