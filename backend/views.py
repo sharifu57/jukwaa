@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from django.db.models.query_utils import Q
 from base.models import *
 from backend.models import Project
+from django.contrib.auth.models import User
+from backend.serializers import *
 
 
 # Create your views here.
@@ -19,3 +21,46 @@ class ProjectStatisticsAPIView(APIView):
         )
 
 
+class PostProjectAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        try:
+            title = data.get("title")
+            description = data.get("description")
+            category = data.get("category")
+            skill = data.get("skill")
+            duration = data.get("duration")
+            created_by = data.get("created_by")
+            currency = data.get("currency")
+            payment_type = data.get("payment_type")
+            budget = data.get("budget")
+            amount = data.get("amount")
+            project_file = data.get("project_file")
+
+            category_instance = Category.objects.get(id=category)
+            skill_instance = Skill.objects.get(id=skill)
+            user_instance = User.objects.get(id=created_by)
+
+            project = Project.objects.create(
+                title=title,
+                description=description,
+                category=category_instance,
+                skill=skill_instance,
+                duration=duration,
+                created_by=user_instance,
+                currency=currency,
+                payment_type=payment_type,
+                budget=budget,
+                amount=amount,
+                project_file=project_file,
+            )
+
+            project.save()
+            serializer = ProjectSerializer(project)
+            return Response(
+                {"status": 201, "message": "project created", "data": serializer.data}
+            )
+        except Exception as e:
+            return Response(
+                {"status": 500, "message": f"Internal Server Error: {str(e)}"}
+            )

@@ -11,4 +11,5 @@ router = DefaultRouter()
 urlpatterns = [
     path("", include(router.urls)),
     path("statistics/", ProjectStatisticsAPIView.as_view(), name="statistics"),
+    path("create_project/", PostProjectAPIView.as_view(), name="create_project"),
 ]
