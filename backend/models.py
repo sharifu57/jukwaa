@@ -13,6 +13,19 @@ PROJECT_BUDGET = (
 )
 
 
+class Budget(BaseModel):
+    name = models.CharField(max_length=300, blank=True, null=True)
+    price_from = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True
+    )
+    price_to = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True
+    )
+
+    def __str__(self):
+        return f"{self.name}-({self.price_from} - {self.price_to})"
+
+
 class Project(BaseModel):
     title = models.CharField(max_length=300, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -20,7 +33,7 @@ class Project(BaseModel):
         Category, on_delete=models.CASCADE, null=True, blank=True
     )
     skills = models.ManyToManyField(Skill, blank=True, null=True)
-    duration = models.IntegerField(choices=PROJECT_DURATION, null=True, blank=True)
+    duration = models.CharField(max_length=300, blank=True, null=True)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -28,7 +41,9 @@ class Project(BaseModel):
         choices=PROJECT_CURRENCY, default=1, null=True, blank=True
     )
     payment_type = models.IntegerField(choices=PAYMENT_TYPE, null=True, blank=True)
-    budget = models.IntegerField(choices=PROJECT_BUDGET, null=True, blank=True)
+    budget = models.ForeignKey(
+        "backend.Budget", null=True, blank=True, on_delete=models.SET_NULL
+    )
     amount = models.CharField(max_length=300, null=True, blank=True)
     project_file = models.FileField(upload_to="projects/", null=True, blank=True)
 

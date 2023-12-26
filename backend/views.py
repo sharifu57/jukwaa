@@ -37,6 +37,9 @@ class PostProjectAPIView(APIView):
             amount = data.get("amount")
             project_file = data.get("project_file")
 
+            budget_instance = (
+                Budget.objects.get(id=budget) if budget is not None else None
+            )
             category_instance = Category.objects.get(id=category)
             skills_instance = Skill.objects.filter(id__in=skills)
             print("==============skills instance", skills_instance)
@@ -50,7 +53,7 @@ class PostProjectAPIView(APIView):
                 created_by=user_instance,
                 currency=currency,
                 payment_type=payment_type,
-                budget=budget,
+                budget=budget_instance,
                 amount=amount,
                 project_file=project_file,
             )
@@ -65,3 +68,10 @@ class PostProjectAPIView(APIView):
             return Response(
                 {"status": 500, "message": f"Internal Server Error: {str(e)}"}
             )
+
+
+class BudgetListAPIView(APIView):
+    def get(self, request):
+        budgets = Budget.objects.filter(is_active=True, is_deleted=False)
+        serializer = BudgetSerializer(budgets, many=True)
+        return Response(serializer.data)
