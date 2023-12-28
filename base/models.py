@@ -28,9 +28,11 @@ class Profile(BaseModel):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=True, blank=True, related_name="profile"
     )
-    phone_number = models.CharField(
-        max_length=12, validators=[RegexValidator(r"^\d{1,10}$")], null=True, blank=True
-    )
+    title = models.CharField(max_length=255, null=True, blank=True)
+    # phone_number = models.CharField(
+    #     max_length=12, validators=[RegexValidator(r"^\d{1,10}$")], null=True, blank=True
+    # )
+    phone_number = models.CharField(max_length=200, null=True, blank=True)
     bio = models.TextField(blank=True, null=True)
     dob = models.DateField(null=True, blank=True)
     user_type = models.IntegerField(choices=USER_TYPE, default=1, null=True, blank=True)

@@ -17,5 +17,6 @@ router.register(r"", RegenerateTokenViewSet, basename="regenerate_otp")
 urlpatterns = [
     path("", include(router.urls)),
     path("categories/", CategoriesListAPIView.as_view(), name="categories"),
-    path("skills/<int:category_id>/", SkillsListAPIView.as_view(), name="skills"),
+    path("skills/<int:category_id>/", SkillsListAPIView.as_view(), name="skills")
+    
 ]

@@ -1,7 +1,14 @@
 from rest_framework import serializers
 from base.models import *
+from backend.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -34,3 +41,34 @@ class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
         fields = "__all__"
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+
+    class Meta:
+        model = Profile
+        fields = "__all__"
+
+
+class VerificationSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = "__all__"
+
+
+# class ProjectSerializer(serializers.ModelSerializer):
+#     user = UserSerializer()
+#     location = LocationSerializer()
+
+#     class Meta:
+#         model = Project
+#         fields = "__all__"

@@ -22,7 +22,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.views import PasswordResetView
 from rest_framework.generics import CreateAPIView
 from base.models import Category, Profile
-from .serializers import RegisterSerializer
+from .serializers import *
 from django.contrib.auth.models import User
 from django.conf import settings
 import requests
@@ -227,7 +227,7 @@ class UserVerificationViewSet(viewsets.GenericViewSet):
                     user = profile.user
                     # token, created = Token.objects.get_or_create(user=user)
                     token, created = RefreshToken.for_user(user), True
-                    serializer = LoginSerializer(user, many=False)
+                    serializer = VerificationSerializer(user, many=False)
                     return Response(
                         {
                             "status": status.HTTP_200_OK,
@@ -325,3 +325,5 @@ class SkillsListAPIView(APIView):
 
         serializer = SkillSerializer(skills, many=True)
         return Response(serializer.data)
+
+

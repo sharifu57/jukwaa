@@ -13,4 +13,9 @@ urlpatterns = [
     path("statistics/", ProjectStatisticsAPIView.as_view(), name="statistics"),
     path("create_project/", PostProjectAPIView.as_view(), name="create_project"),
     path("budgets/", BudgetListAPIView.as_view(), name="budgets"),
+    path(
+        "get_match_projects/<int:category_id>/",
+        GetMatchProjectsAPIView.as_view(),
+        name="get_match_projects",
+    ),
 ]

@@ -75,3 +75,27 @@ class BudgetListAPIView(APIView):
         budgets = Budget.objects.filter(is_active=True, is_deleted=False)
         serializer = BudgetSerializer(budgets, many=True)
         return Response(serializer.data)
+
+
+class GetMatchProjectsAPIView(APIView):
+    def get(self, request, category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+
+        except Category.DoesNotExist:
+            return Response(
+                {"status": status.HTTP_400_BAD_REQUEST, "message": "Failed"}
+            )
+
+        projects = Project.objects.filter(
+            category_id=category, is_active=True, is_deleted=False
+        )
+
+        if projects:
+            serializer = ProjectsListSerializer(projects, many=True)
+            return Response(serializer.data)
+
+        else:
+            return Response(
+                {"status": status.HTTP_400_BAD_REQUEST, "message": "No data"}
+            )
