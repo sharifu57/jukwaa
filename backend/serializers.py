@@ -21,9 +21,16 @@ class BudgetSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class BidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bid
+        fields = "__all__"
+
+
 class ProjectsListSerializer(serializers.ModelSerializer):
     skills = SkillsSerializer(many=True)
     budget = BudgetSerializer()
+    bids = BidSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project

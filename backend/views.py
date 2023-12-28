@@ -7,6 +7,7 @@ from base.models import *
 from backend.models import Project
 from django.contrib.auth.models import User
 from backend.serializers import *
+import pendulum
 
 
 # Create your views here.
@@ -87,9 +88,13 @@ class GetMatchProjectsAPIView(APIView):
                 {"status": status.HTTP_400_BAD_REQUEST, "message": "Failed"}
             )
 
-        projects = Project.objects.filter(
-            category_id=category, is_active=True, is_deleted=False
-        ).order_by("-created")
+        projects = (
+            Project.objects.filter(
+                category_id=category, is_active=True, is_deleted=False
+            )
+            .exclude(application_deadline=pendulum.today())
+            .order_by("-created")
+        )
 
         if projects:
             serializer = ProjectsListSerializer(projects, many=True)

@@ -44,8 +44,25 @@ class Project(BaseModel):
     budget = models.ForeignKey(
         "backend.Budget", null=True, blank=True, on_delete=models.SET_NULL
     )
+    application_deadline = models.DateField(null=True, blank=True)
     amount = models.CharField(max_length=300, null=True, blank=True)
     project_file = models.FileField(upload_to="projects/", null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}"
+
+
+class Bid(BaseModel):
+    project = models.ForeignKey(
+        Project, on_delete=models.SET_NULL, blank=True, null=True, related_name="bids"
+    )
+    bidder = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    proposal = models.TextField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Bid"
+        verbose_name_plural = "Bids"
+
+    def __str__(self):
+        return f"Bid for {self.project.title} by {self.bidder.username}"

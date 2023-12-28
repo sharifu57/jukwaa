@@ -4,3 +4,4 @@ from django.contrib import admin
 admin.site.register(Profile)
 admin.site.register(Category)
 admin.site.register(Skill)
+admin.site.register(Location)
