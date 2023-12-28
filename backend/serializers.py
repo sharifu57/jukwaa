@@ -23,6 +23,7 @@ class BudgetSerializer(serializers.ModelSerializer):
 
 class ProjectsListSerializer(serializers.ModelSerializer):
     skills = SkillsSerializer(many=True)
+    budget = BudgetSerializer()
 
     class Meta:
         model = Project

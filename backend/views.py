@@ -89,7 +89,7 @@ class GetMatchProjectsAPIView(APIView):
 
         projects = Project.objects.filter(
             category_id=category, is_active=True, is_deleted=False
-        )
+        ).order_by("-created")
 
         if projects:
             serializer = ProjectsListSerializer(projects, many=True)
