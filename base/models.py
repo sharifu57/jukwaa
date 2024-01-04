@@ -46,6 +46,7 @@ class Profile(BaseModel):
     otp = models.CharField(max_length=10, null=True, blank=True)
     otp_created_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     is_accepted_term = models.BooleanField(default=False, null=True, blank=True)
+    user_access_token = models.CharField(max_length=5000, null=True, blank=True)
     profile_image = models.ImageField(
         upload_to="profile_images/", null=True, blank=True
     )

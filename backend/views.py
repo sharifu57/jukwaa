@@ -104,3 +104,26 @@ class GetMatchProjectsAPIView(APIView):
             return Response(
                 {"status": status.HTTP_400_BAD_REQUEST, "message": "No data"}
             )
+
+
+class GetProjectsByUserIdAPIView(APIView):
+    def get(self, request, user_id=None):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {"status": status.HTTP_400_BAD_REQUEST, "message": "User not Found"}
+            )
+
+        projects = Project.objects.filter(
+            created_by=user, is_active=True, is_deleted=False
+        )
+
+        if projects:
+            serializer = ProjectsListSerializer(projects, many=True)
+            return Response(serializer.data)
+
+        else:
+            return Response(
+                {"status": status.HTTP_400_BAD_REQUEST, "message": "No data"}
+            )

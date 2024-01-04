@@ -18,4 +18,9 @@ urlpatterns = [
         GetMatchProjectsAPIView.as_view(),
         name="get_match_projects",
     ),
+    path(
+        "get_user_projects/<int:user_id>/",
+        GetProjectsByUserIdAPIView.as_view(),
+        name="get_user_projects",
+    ),
 ]

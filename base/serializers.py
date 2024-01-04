@@ -3,6 +3,7 @@ from base.models import *
 from backend.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -63,6 +64,12 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = "__all__"
+
+
+class RefreshTokenSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField()
+    access_token = serializers.CharField()
+    expires_at = serializers.IntegerField()
 
 
 # class ProjectSerializer(serializers.ModelSerializer):
