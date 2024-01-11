@@ -8,9 +8,12 @@ from backend.models import Project
 from django.contrib.auth.models import User
 from backend.serializers import *
 import pendulum
+import random
+from backend.utils import *
 
 
 # Create your views here.
+
 class ProjectStatisticsAPIView(APIView):
     def get(self, request):
         freelancers = Profile.objects.filter(user_type=1).count()
@@ -56,6 +59,7 @@ class PostProjectAPIView(APIView):
                 payment_type=payment_type,
                 budget=budget_instance,
                 amount=amount,
+                projectId=get_random_number(),
                 project_file=project_file,
             )
 
@@ -77,7 +81,6 @@ class BudgetListAPIView(APIView):
         serializer = BudgetSerializer(budgets, many=True)
         return Response(serializer.data)
 
-
 class GetMatchProjectsAPIView(APIView):
     def get(self, request, category_id):
         try:
@@ -90,7 +93,7 @@ class GetMatchProjectsAPIView(APIView):
 
         projects = (
             Project.objects.filter(
-                category_id=category, is_active=True, is_deleted=False
+                category_id=category, is_active=True, is_deleted=False, status=3
             )
             .exclude(application_deadline=pendulum.today())
             .order_by("-created")
@@ -116,7 +119,7 @@ class GetProjectsByUserIdAPIView(APIView):
             )
 
         projects = Project.objects.filter(
-            created_by=user, is_active=True, is_deleted=False
+            created_by=user, is_active=True, is_deleted=False, status=3
         )
 
         if projects:
@@ -127,3 +130,78 @@ class GetProjectsByUserIdAPIView(APIView):
             return Response(
                 {"status": status.HTTP_400_BAD_REQUEST, "message": "No data"}
             )
+
+class ViewOneProjectAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            project = Project.objects.get(id=pk)
+        except Project.DoesNotExist:
+            return Response({
+                'status': status.HTTP_400_BAD_REQUEST, 'message': 'no project'
+            })
+
+        serializer = ProjectsListSerializer(project, many=False)
+        return Response(serializer.data)
+
+
+class CreateBidAPIView(APIView):
+    def post(self, request):
+        data = request.data
+
+        try:
+            project = data.get('project')
+            bidder = data.get('bidder')
+            duration=data.get('duration')
+            amount = data.get('amount')
+            proposal = data.get('proposal')
+
+            try:
+                user = User.objects.get(id=bidder)
+                print("-------------------user", user)
+            except User.DoesNotExist:
+                return Response({'status': 400, 'message': "No user Available"})
+
+            try:
+                project_instance = Project.objects.get(id=project)
+            except Project.DoesNotExist:
+                return Response({'status': 400, 'message': "Project Does not Exists"})
+
+            if Bid.objects.filter(bidder_id=user.id, project_id=project_instance.id).exists:
+                return Response({
+                    'status': 500,
+                    'message': "Sorry you already have a bid for this project"
+                })
+            else:
+                new_bid = Bid.objects.create(
+                    project_id=project_instance.id,
+                    bidder_id=user.id,
+                    duration=duration,
+                    amount=amount,
+                    proposal=proposal
+                )
+
+                new_bid.save()
+                serializer = BidSerializer(new_bid, many=False)
+                return Response(
+                    {
+                        'status': 201,
+                        'message': 'new bid created successfully',
+                        'data': serializer.data
+                    }
+                )
+        except Exception as e:
+            return Response({'status': 400, 'message': f"{e}"})
+
+
+class ProjectBiddersAPIView(APIView):
+    def get(self, request, project_id):
+        try:
+            project = Project.objects.get(id=project_id)
+
+        except Project.DoesNotExist:
+            return Response({'status':  400, 'message': 'project does not exists'})
+
+        bidders = Bid.objects.filter(project_id=project, is_active=True, is_deleted=False)
+        serializer = BidListSerializer(bidders, many=True)
+
+        return Response({'status': 200, 'message': 'success', 'data': serializer.data})

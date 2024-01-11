@@ -23,4 +23,16 @@ urlpatterns = [
         GetProjectsByUserIdAPIView.as_view(),
         name="get_user_projects",
     ),
+    path("view_project/<int:pk>/",
+         ViewOneProjectAPIView.as_view(), name="view_project"),
+    path(
+        "create_new_bid/",
+        CreateBidAPIView.as_view(),
+        name="create_new_bid"
+    ),
+    path(
+        "project_bidders/<int:project_id>/",
+        ProjectBiddersAPIView.as_view(),
+        name="project_bidders"
+    )
 ]

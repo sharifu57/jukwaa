@@ -43,6 +43,11 @@ def get_random_number():
     return otp
 
 
+def get_random_number():
+    projectId = random.randint(1000000,99999999)
+    return projectId
+
+
 class UserRegisterViewSet(viewsets.GenericViewSet):
     serializer_class = RegisterSerializer
     queryset = User.objects.filter(is_active=True)
@@ -131,12 +136,61 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         )
 
 
-class UserLoginViewSet(viewsets.GenericViewSet):
+class LoginAPIView(APIView):
+    def post(self, request, format=None):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if User.objects.filter(Q(email=email) | Q(username=email)).exists():
+            u = User.objects.filter(email=email).first()
+            username = u.username
+            user = authenticate(username=username, password=password)
+            print("user is authenticated")
+            print(user)
+            if user is not None:
+                if user.is_active:
+                    # user_serializer = UserSerializer(user, many=False)
+                    serializer = VerificationSerializer(user)
+                    token, created = RefreshToken.for_user(user), True
+                    access_token = Profile.objects.update(user_access_token=str(token))
+
+                    # user_access_token = profile.user_access_token
+                    return Response(
+                        {
+                            "status": status.HTTP_200_OK,
+                            "message": "Login Successfully",
+                            "data": serializer.data,
+                            "token": str(token.access_token),
+                            "refresh_token": access_token,
+                            "expires_at": str(token.access_token.lifetime),
+                        }
+                    )
+                else:
+                    return Response(
+                        {
+                            "status": status.HTTP_404_NOT_FOUND,
+                            "message": "Failed to login (not activated)",
+                        }
+                    )
+            else:
+                return Response(
+                    {
+                        "status": status.HTTP_404_NOT_FOUND,
+                        "message": "Invalid username or password",
+                    }
+                )
+        else:
+            return Response(
+                {"status": status.HTTP_404_NOT_FOUND, "message": "User does not exist"}
+            )
+
+
+class UserMobileLoginViewSet(viewsets.GenericViewSet):
     serializer_class = LoginSerializer
     queryset = Profile.objects.filter(user__is_active=True)
 
     @action(detail=False, methods=["POST"])
-    def login(self, request):
+    def user_phone_login(self, request):
         phone_number = request.data.get("phone_number")
         otp = None
 
