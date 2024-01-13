@@ -10,6 +10,7 @@ from backend.serializers import *
 import pendulum
 import random
 from backend.utils import *
+from rest_framework.pagination import PageNumberPagination
 
 
 # Create your views here.
@@ -100,8 +101,12 @@ class GetMatchProjectsAPIView(APIView):
         )
 
         if projects:
-            serializer = ProjectsListSerializer(projects, many=True)
-            return Response(serializer.data)
+
+            paginator = PageNumberPagination()
+            paginator.page_size=10
+            result_page = paginator.paginate_queryset(projects, request)
+            serializer = ProjectsListSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
 
         else:
             return Response(
@@ -201,7 +206,32 @@ class ProjectBiddersAPIView(APIView):
         except Project.DoesNotExist:
             return Response({'status':  400, 'message': 'project does not exists'})
 
-        bidders = Bid.objects.filter(project_id=project, is_active=True, is_deleted=False)
+        bidders = Bid.objects.filter(project_id=project, is_active=True, is_deleted=False).exclude(
+            bidder__profile__bio__isnull=True
+        )
         serializer = BidListSerializer(bidders, many=True)
 
         return Response({'status': 200, 'message': 'success', 'data': serializer.data})
+
+
+class GetProjectsByCategoryAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        categories_with_projects = Category.objects.prefetch_related('project').filter(is_active=True, is_deleted=False)
+
+        serializer_data = []
+        for category in categories_with_projects:
+            category_data = {
+                "id": category.id,
+                "name": category.name,
+                'projects': [
+                    {
+                        'id': project.id,
+                        'title': project.title
+                    }
+                    for project in category.project.all()
+                ]
+            }
+            serializer_data.append(category_data)
+
+        return Response(serializer_data)
+

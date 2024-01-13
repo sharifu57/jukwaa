@@ -34,5 +34,10 @@ urlpatterns = [
         "project_bidders/<int:project_id>/",
         ProjectBiddersAPIView.as_view(),
         name="project_bidders"
+    ),
+    path(
+        "category_projects/",
+        GetProjectsByCategoryAPIView.as_view(),
+        name="category_projects"
     )
 ]

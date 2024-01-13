@@ -37,7 +37,7 @@ class Project(BaseModel):
     title = models.CharField(max_length=300, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=True, blank=True
+        Category, on_delete=models.CASCADE, null=True, blank=True, related_name="project"
     )
     skills = models.ManyToManyField(Skill, blank=True, null=True)
     duration = models.CharField(max_length=300, blank=True, null=True)
