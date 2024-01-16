@@ -235,3 +235,10 @@ class GetProjectsByCategoryAPIView(APIView):
 
         return Response(serializer_data)
 
+
+class GetAllProjectsAPiView(APIView):
+    def get(self, request):
+        projects = Project.objects.filter(is_active=True, is_deleted=False,status=3)
+        serializer = ProjectsListSerializer(projects, many=True)
+        return Response({'status': 200, 'message': "success", 'data': serializer.data})
+
