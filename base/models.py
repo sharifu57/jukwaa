@@ -40,9 +40,9 @@ class Profile(BaseModel):
     category = models.ForeignKey(
         "base.Category", on_delete=models.SET_NULL, null=True, blank=True
     )
-    location = models.ForeignKey(
-        "base.Location", on_delete=models.CASCADE, null=True, blank=True
-    )
+    # location = models.ForeignKey(
+    #     "base.Location", on_delete=models.CASCADE, null=True, blank=True
+    # )
     otp = models.CharField(max_length=10, null=True, blank=True)
     otp_created_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     rate = models.CharField(max_length=300, null=True, blank=True)

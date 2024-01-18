@@ -1,6 +1,7 @@
 from django.db import models
-from base.models import BaseModel, Category, Skill
+from base.models import BaseModel, Category, Skill, Location
 from django.contrib.auth.models import User
+
 
 
 PROJECT_DURATION = ((1, "ASAP"), (2, "Within a Week"), (3, "A Month"), (4, "Custom"))
@@ -53,6 +54,7 @@ class Project(BaseModel):
     )
     application_deadline = models.DateField(null=True, blank=True)
     amount = models.CharField(max_length=300, null=True, blank=True)
+    location = models.ForeignKey("base.Location", on_delete=models.SET_NULL, null=True, blank=True)
     projectId = models.CharField(max_length=300, null=True, blank=True)
     status = models.IntegerField(choices=PROJECT_STATUS, default=1, null=True, blank=True)
     project_file = models.FileField(upload_to="projects/", null=True, blank=True)

@@ -33,6 +33,7 @@ class BidSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ProjectsListSerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
     skills = SkillsSerializer(many=True)
     budget = BudgetSerializer()
     bids = BidSerializer(many=True, read_only=True)

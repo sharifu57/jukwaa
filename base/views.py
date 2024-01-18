@@ -406,3 +406,15 @@ class SkillsListAPIView(APIView):
 
         serializer = SkillSerializer(skills, many=True)
         return Response(serializer.data)
+
+
+class GetLocationsAPiView(APIView):
+    def get(self, request):
+        locations = Location.objects.filter(is_active=True, is_deleted=False)
+        serializer = LocationSerializer(locations, many=True)
+
+        if locations:
+            return Response({'status': 200, 'message': "success", "data": serializer.data})
+
+        else:
+            return Response({'status': 400, 'message': "No locations"})

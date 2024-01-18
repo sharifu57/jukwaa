@@ -238,7 +238,14 @@ class GetProjectsByCategoryAPIView(APIView):
 
 class GetAllProjectsAPiView(APIView):
     def get(self, request):
-        projects = Project.objects.filter(is_active=True, is_deleted=False,status=3)
-        serializer = ProjectsListSerializer(projects, many=True)
-        return Response({'status': 200, 'message': "success", 'data': serializer.data})
+        projects = Project.objects.filter(is_active=True, is_deleted=False,status=3).order_by("-created")
+
+        if projects:
+            paginator = PageNumberPagination()
+            paginator.page_size=10
+            result_page  =paginator.paginate_queryset(projects, request)
+            serializer = ProjectsListSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        else:
+            return Response({'status': 400, 'message': "No Data"})
 
