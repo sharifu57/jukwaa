@@ -15,6 +15,7 @@ from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
 
+
 class ProjectStatisticsAPIView(APIView):
     def get(self, request):
         freelancers = Profile.objects.filter(user_type=1).count()
@@ -29,51 +30,67 @@ class ProjectStatisticsAPIView(APIView):
 class PostProjectAPIView(APIView):
     def post(self, request):
         data = request.data
+
         try:
-            title = data.get("title")
-            description = data.get("description")
+            # title = data.get("title")
+            # description = data.get("description")
             category = data.get("category")
-            skills = data.get("skills", [])
-            duration = data.get("duration")
-            created_by = data.get("created_by")
-            currency = data.get("currency")
-            payment_type = data.get("payment_type")
-            budget = data.get("budget")
-            amount = data.get("amount")
-            project_file = data.get("project_file")
+            skills = data.get("skills")
+            # duration = data.get("duration")
+            # created_by = data.get("created_by")
+            # currency = data.get("currency")
+            # payment_type = data.get("payment_type")
+            # amount = data.get("amount")
+            # deadline = data.get("application_deadline")
+            # project_file = data.get("project_file")
 
-            budget_instance = (
-                Budget.objects.get(id=budget) if budget is not None else None
-            )
+        except Exception as e:
+            return Response({"status": 404, "message": f"Error f{e}"})
+
+        try:
             category_instance = Category.objects.get(id=category)
-            skills_instance = Skill.objects.filter(id__in=skills)
-            print("==============skills instance", skills_instance)
-            user_instance = User.objects.get(id=created_by)
+        except Exception as e:
+            return Response({"status": 404, "message": f"Category Error: {e}"})
 
+        print("===========skills", skills)
+        try:
+            skills_instance = list(Skill.objects.filter(id__in=skills))
+        except Exception as e:
+            return Response({"status": 404, "message": f" Skills Error: {e}"})
+
+        # try:
+        #     user_instance = User.objects.get(id=created_by)
+        # except Exception as e:
+        #     return Response({'status': 404, 'message': f" Skill Error: {e}"})
+
+        try:
             project = Project.objects.create(
-                title=title,
-                description=description,
+                # title=title,
+                # description=description,
                 category=category_instance,
-                duration=duration,
-                created_by=user_instance,
-                currency=currency,
-                payment_type=payment_type,
-                budget=budget_instance,
-                amount=amount,
-                projectId=get_random_number(),
-                project_file=project_file,
+                # duration=duration,
+                # created_by=user_instance,
+                # currency=currency,
+                # payment_type=payment_type,
+                # amount=amount,
+                # application_deadline=deadline,
+                # projectId=get_random_number(),
+                # project_file=project_file,
             )
 
             project.skills.set(skills_instance)
             project.save()
             serializer = ProjectSerializer(project)
             return Response(
-                {"status": 201, "message": "project created", "data": serializer.data}
+                {
+                    "status": 201,
+                    "message": "project created(Wait for Approval)",
+                    "data": serializer.data,
+                }
             )
+
         except Exception as e:
-            return Response(
-                {"status": 500, "message": f"Internal Server Error: {str(e)}"}
-            )
+            return Response({"status": 400, "message": f"Failed to Create: {e}"})
 
 
 class BudgetListAPIView(APIView):
@@ -81,6 +98,7 @@ class BudgetListAPIView(APIView):
         budgets = Budget.objects.filter(is_active=True, is_deleted=False)
         serializer = BudgetSerializer(budgets, many=True)
         return Response(serializer.data)
+
 
 class GetMatchProjectsAPIView(APIView):
     def get(self, request, category_id):
@@ -101,9 +119,8 @@ class GetMatchProjectsAPIView(APIView):
         )
 
         if projects:
-
             paginator = PageNumberPagination()
-            paginator.page_size=10
+            paginator.page_size = 10
             result_page = paginator.paginate_queryset(projects, request)
             serializer = ProjectsListSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
@@ -136,14 +153,15 @@ class GetProjectsByUserIdAPIView(APIView):
                 {"status": status.HTTP_400_BAD_REQUEST, "message": "No data"}
             )
 
+
 class ViewOneProjectAPIView(APIView):
     def get(self, request, pk):
         try:
             project = Project.objects.get(id=pk)
         except Project.DoesNotExist:
-            return Response({
-                'status': status.HTTP_400_BAD_REQUEST, 'message': 'no project'
-            })
+            return Response(
+                {"status": status.HTTP_400_BAD_REQUEST, "message": "no project"}
+            )
 
         serializer = ProjectsListSerializer(project, many=False)
         return Response(serializer.data)
@@ -154,48 +172,52 @@ class CreateBidAPIView(APIView):
         data = request.data
 
         try:
-            project = data.get('project')
-            bidder = data.get('bidder')
-            duration=data.get('duration')
-            amount = data.get('amount')
-            proposal = data.get('proposal')
+            project = data.get("project")
+            bidder = data.get("bidder")
+            duration = data.get("duration")
+            amount = data.get("amount")
+            proposal = data.get("proposal")
 
             try:
                 user = User.objects.get(id=bidder)
                 print("-------------------user", user)
             except User.DoesNotExist:
-                return Response({'status': 400, 'message': "No user Available"})
+                return Response({"status": 400, "message": "No user Available"})
 
             try:
                 project_instance = Project.objects.get(id=project)
             except Project.DoesNotExist:
-                return Response({'status': 400, 'message': "Project Does not Exists"})
+                return Response({"status": 400, "message": "Project Does not Exists"})
 
-            if Bid.objects.filter(bidder_id=user.id, project_id=project_instance.id).exists:
-                return Response({
-                    'status': 500,
-                    'message': "Sorry you already have a bid for this project"
-                })
+            if Bid.objects.filter(
+                bidder_id=user.id, project_id=project_instance.id
+            ).exists:
+                return Response(
+                    {
+                        "status": 500,
+                        "message": "Sorry you already have a bid for this project",
+                    }
+                )
             else:
                 new_bid = Bid.objects.create(
                     project_id=project_instance.id,
                     bidder_id=user.id,
                     duration=duration,
                     amount=amount,
-                    proposal=proposal
+                    proposal=proposal,
                 )
 
                 new_bid.save()
                 serializer = BidSerializer(new_bid, many=False)
                 return Response(
                     {
-                        'status': 201,
-                        'message': 'new bid created successfully',
-                        'data': serializer.data
+                        "status": 201,
+                        "message": "new bid created successfully",
+                        "data": serializer.data,
                     }
                 )
         except Exception as e:
-            return Response({'status': 400, 'message': f"{e}"})
+            return Response({"status": 400, "message": f"{e}"})
 
 
 class ProjectBiddersAPIView(APIView):
@@ -204,32 +226,31 @@ class ProjectBiddersAPIView(APIView):
             project = Project.objects.get(id=project_id)
 
         except Project.DoesNotExist:
-            return Response({'status':  400, 'message': 'project does not exists'})
+            return Response({"status": 400, "message": "project does not exists"})
 
-        bidders = Bid.objects.filter(project_id=project, is_active=True, is_deleted=False).exclude(
-            bidder__profile__bio__isnull=True
-        )
+        bidders = Bid.objects.filter(
+            project_id=project, is_active=True, is_deleted=False
+        ).exclude(bidder__profile__bio__isnull=True)
         serializer = BidListSerializer(bidders, many=True)
 
-        return Response({'status': 200, 'message': 'success', 'data': serializer.data})
+        return Response({"status": 200, "message": "success", "data": serializer.data})
 
 
 class GetProjectsByCategoryAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        categories_with_projects = Category.objects.prefetch_related('project').filter(is_active=True, is_deleted=False)
+        categories_with_projects = Category.objects.prefetch_related("project").filter(
+            is_active=True, is_deleted=False
+        )
 
         serializer_data = []
         for category in categories_with_projects:
             category_data = {
                 "id": category.id,
                 "name": category.name,
-                'projects': [
-                    {
-                        'id': project.id,
-                        'title': project.title
-                    }
+                "projects": [
+                    {"id": project.id, "title": project.title}
                     for project in category.project.all()
-                ]
+                ],
             }
             serializer_data.append(category_data)
 
@@ -238,14 +259,38 @@ class GetProjectsByCategoryAPIView(APIView):
 
 class GetAllProjectsAPiView(APIView):
     def get(self, request):
-        projects = Project.objects.filter(is_active=True, is_deleted=False,status=3).order_by("-created")
+        projects = Project.objects.filter(
+            is_active=True, is_deleted=False, status=3
+        ).order_by("-created")
+        data = request.GET
+
+        print("==================data", data)
+        category_ids = request.GET.getlist("category_ids")
+        location_id = request.GET.get("location_id")
+        min_amount = request.GET.get("min")
+        max_amount = request.GET.get("max")
+
+        print("==================categories")
+        print(category_ids)
+        print("=================end categories")
+        if category_ids:
+            projects = projects.filter(category__id__in=category_ids)
+        if location_id:
+            projects = projects.filter(location__id=location_id)
+        if min_amount:
+            projects = projects.filter(
+                Q(budget__price_from__gte=min_amount) | Q(amount__gte=min_amount)
+            )
+        if max_amount:
+            projects = projects.filter(
+                Q(budget__price_to__lte=max_amount) | Q(amount__lte=max_amount)
+            )
 
         if projects:
             paginator = PageNumberPagination()
-            paginator.page_size=10
-            result_page  =paginator.paginate_queryset(projects, request)
+            paginator.page_size = 10
+            result_page = paginator.paginate_queryset(projects, request)
             serializer = ProjectsListSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
         else:
-            return Response({'status': 400, 'message': "No Data"})
-
+            return Response({"status": 400, "message": "No Data"})
