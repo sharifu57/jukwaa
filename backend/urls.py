@@ -44,5 +44,10 @@ urlpatterns = [
         "projects/",
         GetAllProjectsAPiView.as_view(),
         name="projects"
+    ),
+    path(
+        "admin_dashboard_statistics/",
+        AdminStatisticsDashboardAPiView.as_view(),
+        name="admin_statistics"
     )
 ]

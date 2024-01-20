@@ -32,16 +32,16 @@ class PostProjectAPIView(APIView):
         data = request.data
 
         try:
-            # title = data.get("title")
-            # description = data.get("description")
+            title = data.get("title")
+            description = data.get("description")
             category = data.get("category")
             skills = data.get("skills")
-            # duration = data.get("duration")
-            # created_by = data.get("created_by")
+            duration = data.get("duration")
+            created_by = data.get("created_by")
             # currency = data.get("currency")
             # payment_type = data.get("payment_type")
-            # amount = data.get("amount")
-            # deadline = data.get("application_deadline")
+            amount = data.get("amount")
+            deadline = data.get("application_deadline")
             # project_file = data.get("project_file")
 
         except Exception as e:
@@ -58,23 +58,23 @@ class PostProjectAPIView(APIView):
         except Exception as e:
             return Response({"status": 404, "message": f" Skills Error: {e}"})
 
-        # try:
-        #     user_instance = User.objects.get(id=created_by)
-        # except Exception as e:
-        #     return Response({'status': 404, 'message': f" Skill Error: {e}"})
+        try:
+            user_instance = User.objects.get(id=created_by)
+        except Exception as e:
+            return Response({'status': 404, 'message': f" User Error: {e}"})
 
         try:
             project = Project.objects.create(
-                # title=title,
-                # description=description,
+                title=title,
+                description=description,
                 category=category_instance,
-                # duration=duration,
-                # created_by=user_instance,
+                duration=duration,
+                created_by=user_instance,
                 # currency=currency,
                 # payment_type=payment_type,
-                # amount=amount,
-                # application_deadline=deadline,
-                # projectId=get_random_number(),
+                amount=amount,
+                application_deadline=deadline,
+                projectId=get_random_number(),
                 # project_file=project_file,
             )
 
@@ -294,3 +294,19 @@ class GetAllProjectsAPiView(APIView):
             return paginator.get_paginated_response(serializer.data)
         else:
             return Response({"status": 400, "message": "No Data"})
+
+
+class AdminStatisticsDashboardAPiView(APIView):
+    def get(self, request):
+        projects = Project.objects.all()
+        freelancers = Profile.objects.filter(user_type=1)
+        employers = Profile.objects.filter(user_type=2)
+
+        return Response({
+            'status': 200,
+            'message': 'success',
+            'projects': projects.count(),
+            'freelancers': freelancers.count(),
+            'employers': employers.count()
+        })
+
