@@ -24,5 +24,6 @@ urlpatterns = [
         GetUserAccessTokenAPIView.as_view(),
         name="user_access_token",
     ),
-    path('locations/', GetLocationsAPiView.as_view(), name="locations")
+    path('locations/', GetLocationsAPiView.as_view(), name="locations"),
+    path("users/", GetAllUsersAPIView.as_view(), name="users")
 ]

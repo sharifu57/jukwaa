@@ -296,6 +296,11 @@ class GetAllProjectsAPiView(APIView):
             return Response({"status": 400, "message": "No Data"})
 
 
+class ProjectChatAPIView(APIView):
+    def get(self, request):
+        projects = Project.objects.filter(is_active=True, is_deleted=False)[:10]
+        serializer = ProjectsListSerializer(projects, many=True)
+        return Response(serializer.data)
 class AdminStatisticsDashboardAPiView(APIView):
     def get(self, request):
         projects = Project.objects.all()

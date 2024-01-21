@@ -153,6 +153,7 @@ class LoginAPIView(APIView):
                     serializer = VerificationSerializer(user)
                     token, created = RefreshToken.for_user(user), True
                     access_token = Profile.objects.update(user_access_token=str(token))
+                    user.last_login = timezone.now()
 
                     # user_access_token = profile.user_access_token
                     return Response(
@@ -418,3 +419,10 @@ class GetLocationsAPiView(APIView):
 
         else:
             return Response({'status': 400, 'message': "No locations"})
+
+
+class GetAllUsersAPIView(APIView):
+    def get(self, request):
+        users = User.objects.filter(is_active=True).order_by('-last_login')
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)

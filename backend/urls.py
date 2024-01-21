@@ -49,5 +49,10 @@ urlpatterns = [
         "admin_dashboard_statistics/",
         AdminStatisticsDashboardAPiView.as_view(),
         name="admin_statistics"
+    ),
+    path(
+        "projects_chats/",
+        ProjectChatAPIView.as_view(),
+        name="projects_chats"
     )
 ]
