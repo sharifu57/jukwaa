@@ -59,5 +59,10 @@ urlpatterns = [
         "project_statistics/",
         ProjectStatisticsAPIView.as_view(),
         name="project_statistics"
+    ),
+    path(
+        "create_payment/",
+        CreatePaymentAPIView.as_view(),
+        name="create_payment"
     )
 ]

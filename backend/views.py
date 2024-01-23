@@ -12,6 +12,9 @@ import random
 from backend.utils import *
 from rest_framework.pagination import PageNumberPagination
 from xml.etree import ElementTree as ET
+# from services.payment_data import  ProcessPaymentData
+from backend.services.payment_data import ProcessPaymentData
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -338,7 +341,16 @@ class ProjectStatisticsAPIView(APIView):
         )
 
 # handle all the payment logics
-
+class CreatePaymentAPIView(APIView):
+    def post(self, request):
+        data = request.body
+        print("==============data", data)
+        try:
+            paymentData = ProcessPaymentData().sync_billpay(request)
+            return HttpResponse(paymentData, content_type='text/xml')
+        except Exception as e:
+            error_response = ProcessPaymentData().generate_error_response("error100", "General Error")
+            return HttpResponse(error_response, content_type='text/xml', status=404)
 # end the handling of the payment logics
 
 
