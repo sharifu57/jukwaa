@@ -11,6 +11,7 @@ import pendulum
 import random
 from backend.utils import *
 from rest_framework.pagination import PageNumberPagination
+from xml.etree import ElementTree as ET
 
 
 # Create your views here.
@@ -288,7 +289,7 @@ class GetAllProjectsAPiView(APIView):
 
         if projects:
             paginator = PageNumberPagination()
-            paginator.page_size = 10
+            # paginator.page_size = 10
             result_page = paginator.paginate_queryset(projects, request)
             serializer = ProjectsListSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
@@ -314,4 +315,31 @@ class AdminStatisticsDashboardAPiView(APIView):
             'freelancers': freelancers.count(),
             'employers': employers.count()
         })
+
+
+class ProjectStatisticsAPIView(APIView):
+    def get(self, request):
+        projects = Project.objects.filter(is_active=True, is_deleted=False)
+
+        new_projects = projects.filter(status=0).count()
+        pending_projects = projects.filter(status=1).count()
+        approved_projects = projects.filter(status=3).count()
+        rejected_projects = projects.filter(status=4).count()
+
+        return Response(
+            {
+                'status': 200,
+                'projects': projects.count(),
+                'new_projects': new_projects,
+                'pending_projects': pending_projects,
+                'approved_projects': approved_projects,
+                'rejected_projects': rejected_projects
+            }
+        )
+
+# handle all the payment logics
+
+# end the handling of the payment logics
+
+
 

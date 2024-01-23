@@ -14,10 +14,16 @@ PROJECT_BUDGET = (
 )
 
 PROJECT_STATUS = (
+    (0, "New"),
     (1, "Pending"),
     (2, "In Review"),
     (3, "Approved"),
     (4, "Rejected")
+)
+
+PAYMENT_STATUS = (
+    (0, "Not Paid"),
+    (1, "Paid")
 )
 
 
@@ -56,7 +62,8 @@ class Project(BaseModel):
     amount = models.CharField(max_length=300, null=True, blank=True)
     location = models.ForeignKey("base.Location", on_delete=models.SET_NULL, null=True, blank=True)
     projectId = models.CharField(max_length=300, null=True, blank=True)
-    status = models.IntegerField(choices=PROJECT_STATUS, default=1, null=True, blank=True)
+    status = models.IntegerField(choices=PROJECT_STATUS, default=0, null=True, blank=True)
+    payment_status = models.IntegerField(choices=PAYMENT_STATUS, default=0, null=True, blank=True)
     project_file = models.FileField(upload_to="projects/", null=True, blank=True)
 
     def __str__(self):
