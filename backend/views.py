@@ -13,7 +13,7 @@ from backend.utils import *
 from rest_framework.pagination import PageNumberPagination
 from xml.etree import ElementTree as ET
 # from services.payment_data import  ProcessPaymentData
-from backend.services.payment_data import ProcessPaymentData
+from backend.services.payment_data import ProcessPaymentData, TigopesaPayment
 from django.http import HttpResponse
 
 
@@ -81,17 +81,24 @@ class PostProjectAPIView(APIView):
                 projectId=get_random_number(),
                 # project_file=project_file,
             )
+            email = user_instance.email
 
             project.skills.set(skills_instance)
             project.save()
-            serializer = ProjectSerializer(project)
-            return Response(
-                {
-                    "status": 201,
-                    "message": "project created(Wait for Approval)",
-                    "data": serializer.data,
-                }
-            )
+            try:
+                payment = TigopesaPayment().process_payment(500, email)
+                print("============payment response", payment)
+                serializer = ProjectSerializer(project)
+                return Response(
+                    {
+                        "status": 201,
+                        "message": "project created(Wait for Approval)",
+                        "data": serializer.data,
+                        # "payment": payment
+                    }
+                )
+            except Exception as e:
+                return
 
         except Exception as e:
             return Response({"status": 400, "message": f"Failed to Create: {e}"})
@@ -264,7 +271,7 @@ class GetProjectsByCategoryAPIView(APIView):
 class GetAllProjectsAPiView(APIView):
     def get(self, request):
         projects = Project.objects.filter(
-            is_active=True, is_deleted=False, status=3
+            is_active=True, is_deleted=False
         ).order_by("-created")
         data = request.GET
 
@@ -344,14 +351,51 @@ class ProjectStatisticsAPIView(APIView):
 class CreatePaymentAPIView(APIView):
     def post(self, request):
         data = request.body
-        print("==============data", data)
+        # print("==============data", data)
         try:
+            print("==============success")
             paymentData = ProcessPaymentData().sync_billpay(request)
             return HttpResponse(paymentData, content_type='text/xml')
         except Exception as e:
+            print("===========fail here")
             error_response = ProcessPaymentData().generate_error_response("error100", "General Error")
             return HttpResponse(error_response, content_type='text/xml', status=404)
 # end the handling of the payment logics
 
+class GetOneProjectAPIView(APIView):
+    def get(self, request, projectId):
+        try:
+            project = Project.objects.get(id=projectId)
+
+            if project:
+                serializer = ProjectsListSerializer(project, many=False)
+                return Response(serializer.data)
+
+            else:
+                return Response({'status': 400, 'message': 'Failed to get Data'})
+
+        except Project.DoesNotExist:
+            return Response({'status': 400, 'message': 'No Project Available'})
+
+class UpdateProjectStatusAPIView(APIView):
+    def put(self, request, projectId):
+        try:
+            project = Project.objects.get(id=projectId)
+        except Project.DoesNotExist:
+            return Response({'status': 400})
+
+        status = request.data.get('status')
+        if status == 3:
+            project.status = status
+            project.save()
+            return Response({'status': 201, 'message': 'approved'})
+
+        if status == 4:
+            project.status = status
+            project.save()
+            return Response({'status': 201, 'message': 'rejected'})
+
+        else:
+            return Response({'status': 400, 'message': 'Invalid Status Input'})
 
 

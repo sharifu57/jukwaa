@@ -64,5 +64,15 @@ urlpatterns = [
         "create_payment/",
         CreatePaymentAPIView.as_view(),
         name="create_payment"
+    ),
+    path(
+        'get_project/<int:projectId>/',
+        GetOneProjectAPIView.as_view(),
+        name="view_one_project"
+    ),
+    path(
+        'update_project_status/<int:projectId>/',
+        UpdateProjectStatusAPIView.as_view(),
+        name="update_project_status"
     )
 ]
