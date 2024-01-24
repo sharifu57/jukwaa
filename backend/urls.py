@@ -46,6 +46,11 @@ urlpatterns = [
         name="projects"
     ),
     path(
+      "projects_list/",
+        GetAllProjectsListAPiView.as_view(),
+        name="project_lists"
+    ),
+    path(
         "admin_dashboard_statistics/",
         AdminStatisticsDashboardAPiView.as_view(),
         name="admin_statistics"

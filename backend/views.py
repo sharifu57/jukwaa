@@ -46,6 +46,7 @@ class PostProjectAPIView(APIView):
             # payment_type = data.get("payment_type")
             amount = data.get("amount")
             deadline = data.get("application_deadline")
+            location = data.get("location")
             # project_file = data.get("project_file")
 
         except Exception as e:
@@ -68,12 +69,18 @@ class PostProjectAPIView(APIView):
             return Response({'status': 404, 'message': f" User Error: {e}"})
 
         try:
+            location_instance = Location.objects.get(id=location)
+        except Exception as e:
+            return Response({'status': 400, 'message': f"location error: {e}"})
+
+        try:
             project = Project.objects.create(
                 title=title,
                 description=description,
                 category=category_instance,
                 duration=duration,
                 created_by=user_instance,
+                location=location_instance,
                 # currency=currency,
                 # payment_type=payment_type,
                 amount=amount,
@@ -300,6 +307,42 @@ class GetAllProjectsAPiView(APIView):
         if projects:
             paginator = PageNumberPagination()
             # paginator.page_size = 10
+            result_page = paginator.paginate_queryset(projects, request)
+            serializer = ProjectsListSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        else:
+            return Response({"status": 400, "message": "No Data"})
+
+
+class GetAllProjectsListAPiView(APIView):
+    def get(self, request):
+        projects = Project.objects.filter(
+            is_active=True, is_deleted=False, status=3
+        ).order_by("-created")
+        data = request.GET
+
+        print("==================data", data)
+        category_ids = request.GET.getlist("category_ids")
+        location_id = request.GET.get("location_id")
+        min_amount = request.GET.get("min")
+        max_amount = request.GET.get("max")
+
+        if category_ids:
+            projects = projects.filter(category__id__in=category_ids)
+        if location_id:
+            projects = projects.filter(location__id=location_id)
+        if min_amount:
+            projects = projects.filter(
+                Q(budget__price_from__gte=min_amount) | Q(amount__gte=min_amount)
+            )
+        if max_amount:
+            projects = projects.filter(
+                Q(budget__price_to__lte=max_amount) | Q(amount__lte=max_amount)
+            )
+
+        if projects:
+            paginator = PageNumberPagination()
+            paginator.page_size = 7
             result_page = paginator.paginate_queryset(projects, request)
             serializer = ProjectsListSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
