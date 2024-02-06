@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "rest_framework.authtoken",
+    "easyaudit"
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_otp.middleware.OTPMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "easyaudit.middleware.easyaudit.EasyAuditMiddleware"
 ]
 
 REST_FRAMEWORK = {

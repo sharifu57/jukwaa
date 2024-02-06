@@ -92,11 +92,9 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         )
         user.first_name = first_name
         user.last_name = last_name
-        # user.is_active = True
+        user.is_active = False
         user_id = user.id
-        print("==============user_id", user_id)
         try:
-            print("-------------yes")
             send_otp_email(user_id)
             user.save()
         except Exception as e:
