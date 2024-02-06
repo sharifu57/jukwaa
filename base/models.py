@@ -48,6 +48,7 @@ class Profile(BaseModel):
     rate = models.CharField(max_length=300, null=True, blank=True)
     is_accepted_term = models.BooleanField(default=False, null=True, blank=True)
     user_access_token = models.CharField(max_length=5000, null=True, blank=True)
+    is_email_verified = models.BooleanField(default=False, null=True, blank=True)
     profile_image = models.ImageField(
         upload_to="profile_images/", null=True, blank=True
     )

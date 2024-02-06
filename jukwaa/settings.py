@@ -30,12 +30,18 @@ OTP_API_KEY = "68c9d2854d3ffcbb"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-HOST_IP = "192.168.96.1"
+HOST_IP = "172.23.176.1"
 ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
 
-
-# Application definition
+# email configuration setup 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'sharifumajid3@gmail.com'
+EMAIL_HOST_PASSWORD = 'kmdv lbzm upio nnik'
 
 INSTALLED_APPS = [
     "django.contrib.admin",

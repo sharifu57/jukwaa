@@ -34,18 +34,7 @@ import random
 import base64
 import json
 import jwt
-
-# Create your views here.
-
-
-def get_random_number():
-    otp = random.randint(1000, 9999)
-    return otp
-
-
-def get_random_number():
-    projectId = random.randint(1000000,99999999)
-    return projectId
+from base.common import get_random_number, send_otp_email
 
 
 class UserRegisterViewSet(viewsets.GenericViewSet):
@@ -103,14 +92,22 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.is_active = True
-        user.save()
+        # user.is_active = True
+        user_id = user.id
+        print("==============user_id", user_id)
+        try:
+            print("-------------yes")
+            send_otp_email(user_id)
+            user.save()
+        except Exception as e:
+            print("------------no---")
+            return Response({'status': 400,'message': f'{e}'})
 
         user_profile, created = Profile.objects.get_or_create(user=user)
         user_profile.user_type = user_type
         user_profile.phone_number = phone_number
         user_profile.is_accepted_term = True
-        # user_profile.otp = get_random_number()
+        user_profile.otp = get_random_number()
 
         category_instance = Category.objects.get(pk=category)
         user_profile.category = category_instance
