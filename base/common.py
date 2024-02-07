@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from base.models import Profile
 
-def get_random_number():
+def get_otp_number():
     otp = random.randint(1000, 9999)
     return otp
 

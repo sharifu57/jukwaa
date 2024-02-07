@@ -34,7 +34,7 @@ import random
 import base64
 import json
 import jwt
-from base.common import get_random_number, send_otp_email
+from base.common import get_random_number, send_otp_email, get_otp_number
 
 
 class UserRegisterViewSet(viewsets.GenericViewSet):
@@ -50,6 +50,8 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         category = request.data.get("category")
         phone_number = request.data.get("phone_number")
         is_accepted_term = request.data.get("is_accepted_term")
+        password = request.data.get("password")
+        
 
         if not email or not first_name or not last_name:
             return Response(
@@ -81,31 +83,31 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
                 }
             )
 
-        password = get_user_model().objects.make_random_password()
+        # password = get_user_model().objects.make_random_password()
         try:
             validate_password(password)
         except ValidationError as e:
             return Response({"status": status.HTTP_400_BAD_REQUEST, "message": str(e)})
 
-        user = User.objects.create_user(
-            username=username, email=email, password=password
-        )
-        user.first_name = first_name
-        user.last_name = last_name
-        user.is_active = False
-        user_id = user.id
+        
         try:
-            send_otp_email(user_id)
+            user = User.objects.create_user(
+                username=username, email=email, password=password
+            )
+            user.first_name = first_name
+            user.last_name = last_name
+            user.is_active = False
+            user_id = user.id
+            # send_otp_email(user_id)
             user.save()
         except Exception as e:
-            print("------------no---")
             return Response({'status': 400,'message': f'{e}'})
 
         user_profile, created = Profile.objects.get_or_create(user=user)
         user_profile.user_type = user_type
         user_profile.phone_number = phone_number
         user_profile.is_accepted_term = True
-        user_profile.otp = get_random_number()
+        user_profile.otp = get_otp_number()
 
         category_instance = Category.objects.get(pk=category)
         user_profile.category = category_instance
@@ -125,9 +127,9 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         # send sms to the user
 
         # end send sms to user
-
+        serializer = RegisterResponseSerializer(user)
         return Response(
-            {"status": status.HTTP_201_CREATED, "message": "Successfully Created"}
+            {"status": status.HTTP_201_CREATED, "message": "Successfully Created", "data": serializer.data}
         )
 
 
@@ -140,8 +142,6 @@ class LoginAPIView(APIView):
             u = User.objects.filter(email=email).first()
             username = u.username
             user = authenticate(username=username, password=password)
-            print("user is authenticated")
-            print(user)
             if user is not None:
                 if user.is_active:
                     # user_serializer = UserSerializer(user, many=False)
@@ -249,6 +249,61 @@ class UserMobileLoginViewSet(viewsets.GenericViewSet):
                 "message": "Phone Number Does not Exist",
             }
         )
+
+class VerificationViewSet(viewsets.GenericViewSet):
+    serializer_class = LoginSerializer
+    queryset = User.objects.all()
+    @action(detail=False, methods=["POST"])
+    def verify(self, request):
+        email = request.data.get("email")
+        otp = request.data.get("otp")
+
+        if email and otp:
+            profile = Profile.objects.filter(user__email__iexact=email, otp=otp).first()
+            if (profile and profile.user is not None and profile.otp_created_at is not None and profile.otp_is_expired==False):
+                expiration_time = profile.otp_created_at + timedelta(minutes=5)
+                current_time = timezone.now()
+
+                if current_time <= expiration_time:
+                    user = profile.user
+                    user.is_active=True
+                    user.save()
+                    token, created = RefreshToken.for_user(user), True
+                    serializer = VerificationSerializer(user, many=False)
+
+                    access_token = Profile.objects.update(user_access_token=str(token))
+
+                    user_access_token = profile.user_access_token
+                    profile.otp_is_expired = True
+                    profile.save()
+                    return Response(
+                        {
+                            "status": status.HTTP_200_OK,
+                            "message": "OTP Verified successfully",
+                            "data": serializer.data,
+                            "token": str(token.access_token),
+                            "refresh_token": user_access_token,
+                            "expires_at": str(token.access_token.lifetime),
+                        }
+                    )
+                else:
+                    return Response(
+                        {
+                            "status": status.HTTP_400_BAD_REQUEST,
+                            "message": "OTP has Expired",
+                        }
+                    )
+            return Response(
+                {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Failed to verify OTP",
+                }
+            )
+        
+        return Response(
+            {"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Invalid OTP"}
+        )
+
 
 
 class UserVerificationViewSet(viewsets.GenericViewSet):

@@ -44,7 +44,8 @@ class Profile(BaseModel):
     #     "base.Location", on_delete=models.CASCADE, null=True, blank=True
     # )
     otp = models.CharField(max_length=10, null=True, blank=True)
-    otp_created_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    otp_created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    otp_is_expired = models.BooleanField(default=False, null=True, blank=True)
     rate = models.CharField(max_length=300, null=True, blank=True)
     is_accepted_term = models.BooleanField(default=False, null=True, blank=True)
     user_access_token = models.CharField(max_length=5000, null=True, blank=True)

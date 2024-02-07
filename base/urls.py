@@ -12,7 +12,8 @@ router = DefaultRouter()
 router.register(r"", UserRegisterViewSet, basename="register"),
 router.register(r"", UserMobileLoginViewSet, basename="phone_number_login"),
 router.register(r"", UserVerificationViewSet, basename="verification"),
-router.register(r"", RegenerateTokenViewSet, basename="regenerate_otp")
+router.register(r"", RegenerateTokenViewSet, basename="regenerate_otp"),
+router.register(r"", VerificationViewSet, basename="verify")
 
 urlpatterns = [
     path("", include(router.urls)),
