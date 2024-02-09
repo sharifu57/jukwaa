@@ -181,74 +181,74 @@ class LoginAPIView(APIView):
             )
 
 
-class UserMobileLoginViewSet(viewsets.GenericViewSet):
-    serializer_class = LoginSerializer
-    queryset = Profile.objects.filter(user__is_active=True)
+# class UserMobileLoginViewSet(viewsets.GenericViewSet):
+#     serializer_class = LoginSerializer
+#     queryset = Profile.objects.filter(user__is_active=True)
 
-    @action(detail=False, methods=["POST"])
-    def user_phone_login(self, request):
-        phone_number = request.data.get("phone_number")
-        otp = None
+#     @action(detail=False, methods=["POST"])
+#     def user_phone_login(self, request):
+#         phone_number = request.data.get("phone_number")
+#         otp = None
 
-        if phone_number:
-            profile = Profile.objects.filter(
-                is_active=True, is_deleted=False, phone_number__iexact=phone_number
-            ).first()
+#         if phone_number:
+#             profile = Profile.objects.filter(
+#                 is_active=True, is_deleted=False, phone_number__iexact=phone_number
+#             ).first()
 
-            if profile is not None:
-                profile.otp = get_random_number()
-                otp = profile.otp
-                profile.otp_created_at = timezone.now()
-                profile.save()
+#             if profile is not None:
+#                 profile.otp = get_random_number()
+#                 otp = profile.otp
+#                 profile.otp_created_at = timezone.now()
+#                 profile.save()
 
-                sms_url = "https://apiotp.beem.africa/v1/request"
-                api_key = settings.OTP_API_KEY  # Replace with your actual API key
-                secret_key = (
-                    settings.OTP_SECRET_KEY
-                )  # Replace with your actual secret key
+#                 sms_url = "https://apiotp.beem.africa/v1/request"
+#                 api_key = settings.OTP_API_KEY  # Replace with your actual API key
+#                 secret_key = (
+#                     settings.OTP_SECRET_KEY
+#                 )  # Replace with your actual secret key
 
-                auth_str = f"{api_key}:{secret_key}"
-                auth_bytes = base64.b64encode(auth_str.encode("utf-8"))
-                auth_str_encoded = auth_bytes.decode("utf-8")
+#                 auth_str = f"{api_key}:{secret_key}"
+#                 auth_bytes = base64.b64encode(auth_str.encode("utf-8"))
+#                 auth_str_encoded = auth_bytes.decode("utf-8")
 
-                headers = {
-                    "Content-Type": "application/json",
-                    "Authorization": f"Basic {auth_str_encoded}",
-                }
+#                 headers = {
+#                     "Content-Type": "application/json",
+#                     "Authorization": f"Basic {auth_str_encoded}",
+#                 }
 
-                sms_params = {"appId": 1, "msisdn": phone_number}
-                response = requests.post(url=sms_url, json=sms_params, headers=headers)
+#                 sms_params = {"appId": 1, "msisdn": phone_number}
+#                 response = requests.post(url=sms_url, json=sms_params, headers=headers)
 
-                try:
-                    sms_data = response.json()
-                except ValueError as e:
-                    # Handle the case where the response is not valid JSON
-                    print(f"Error parsing JSON: {e}")
-                    sms_data = {"error": "Invalid JSON response"}
+#                 try:
+#                     sms_data = response.json()
+#                 except ValueError as e:
+#                     # Handle the case where the response is not valid JSON
+#                     print(f"Error parsing JSON: {e}")
+#                     sms_data = {"error": "Invalid JSON response"}
 
-                return Response(
-                    {
-                        "status": status.HTTP_200_OK,
-                        "message": "success",
-                        "otp": otp,
-                        "phone_number": phone_number,
-                        "sms_response": sms_data,
-                    }
-                )
+#                 return Response(
+#                     {
+#                         "status": status.HTTP_200_OK,
+#                         "message": "success",
+#                         "otp": otp,
+#                         "phone_number": phone_number,
+#                         "sms_response": sms_data,
+#                     }
+#                 )
 
-            return Response(
-                {
-                    "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "message": "No Profile found",
-                }
-            )
+#             return Response(
+#                 {
+#                     "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                     "message": "No Profile found",
+#                 }
+#             )
 
-        return Response(
-            {
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": "Phone Number Does not Exist",
-            }
-        )
+#         return Response(
+#             {
+#                 "status": status.HTTP_400_BAD_REQUEST,
+#                 "message": "Phone Number Does not Exist",
+#             }
+#         )
 
 class VerificationViewSet(viewsets.GenericViewSet):
     serializer_class = LoginSerializer
@@ -259,6 +259,7 @@ class VerificationViewSet(viewsets.GenericViewSet):
         otp = request.data.get("otp")
 
         if email and otp:
+            print(f"===============payload {email}-{otp}")
             profile = Profile.objects.filter(user__email__iexact=email, otp=otp).first()
             if (profile and profile.user is not None and profile.otp_created_at is not None and profile.otp_is_expired==False):
                 expiration_time = profile.otp_created_at + timedelta(minutes=5)
@@ -305,133 +306,172 @@ class VerificationViewSet(viewsets.GenericViewSet):
         )
 
 
+class RegenerateExpiredOTPAPIView(APIView):
+    
+    def put(self, request):
+        email = request.data.get("email")
+        if email:
+            user = User.objects.get(email=email)
+            if not user.is_active:
+                profile = Profile.objects.filter(user__email__iexact=email).first()
 
-class UserVerificationViewSet(viewsets.GenericViewSet):
-    serializer_class = LoginSerializer
-    queryset = Profile.objects.filter(user__is_active=True)
+                if profile:
+                    try:
+                        profile_instance = Profile.objects.get(id=profile.id)
+                        profile_instance.otp = get_otp_number()
+                        profile_instance.otp_created_at = timezone.now()
+                        profile_instance.save()
 
-    @action(detail=False, methods=["POST"])
-    def verification(self, request):
-        phone_number = request.data.get("phone_number")
-        otp = request.data.get("otp")
-
-        if phone_number and otp:
-            profile = Profile.objects.filter(
-                phone_number__iexact=phone_number, otp__iexact=otp
-            ).first()
-
-            if (
-                profile
-                and profile.user is not None
-                and profile.otp_created_at is not None
-            ):
-                expiration_time = profile.otp_created_at + timedelta(minutes=4)
-                current_time = timezone.now()
-
-                if current_time <= expiration_time:
-                    user = profile.user
-                    # token, created = Token.objects.get_or_create(user=user)
-                    token, created = RefreshToken.for_user(user), True
-                    serializer = VerificationSerializer(user, many=False)
-
-                    access_token = Profile.objects.update(user_access_token=str(token))
-
-                    user_access_token = profile.user_access_token
-                    return Response(
-                        {
-                            "status": status.HTTP_200_OK,
-                            "message": "OTP Verified successfully",
-                            "data": serializer.data,
-                            "token": str(token.access_token),
-                            "refresh_token": user_access_token,
-                            "expires_at": str(token.access_token.lifetime),
-                        }
-                    )
-
+                        return Response({'status': 200, 'message': 'Successfully generated Otp'})
+                    
+                    except Profile.DoesNotExist:
+                        return Response({
+                            'status': 400,
+                            'message': 'This user does not Exist'
+                        })
+                
                 else:
-                    return Response(
-                        {
-                            "status": status.HTTP_400_BAD_REQUEST,
-                            "message": "OTP has Expired",
-                        }
-                    )
-
-            return Response(
-                {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Failed to verify OTP",
-                }
-            )
-        return Response(
-            {"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Wrong inputs"}
-        )
-
-
-class GetUserAccessTokenAPIView(APIView):
-    def get(self, request, pk):
-        try:
-            user = User.objects.get(id=pk)
-        except User.DoesNotExist:
-            return Response(
-                {"status": status.HTTP_400_BAD_REQUEST, "message": "No User found"}
-            )
-
-        refresh_token = RefreshToken.for_user(user)
-        access_token = str(refresh_token.access_token)
-        expires_in_seconds = int(refresh_token.access_token.lifetime.total_seconds())
-
-        data = {
-            "refresh_token": str(refresh_token),
-            "access_token": access_token,
-            "expires_at": expires_in_seconds,
-        }
-
-        serializer = RefreshTokenSerializer(data)
-        return Response(serializer.data)
-
-
-class RegenerateTokenViewSet(viewsets.GenericViewSet):
-    serializer_class = LoginSerializer
-    queryset = Profile.objects.filter(user__is_active=True)
-
-    @action(detail=False, methods=["POST"])
-    def regenerate_otp(self, request):
-        data = request.data
-        if not isinstance(data, dict):
-            data = {"phone_number": str(data)}
-
-        phone_number = data.get("phone_number")
-
-        if phone_number:
-            profile = Profile.objects.filter(
-                user__is_active=True,
-                is_deleted=False,
-                phone_number__iexact=phone_number,
-            ).first()
-
-            if profile is not None:
-                profile.otp = get_random_number()
-                profile.otp_created_at = timezone.now()
-                profile.save()
-
-                return Response(
-                    {
-                        "status": status.HTTP_200_OK,
-                        "message": "New OTP Has Been sent",
-                        "otp": profile.otp,
-                    }
-                )
+                    return Response({
+                        'status': 400,
+                        'message': 'Profile not found for given email'
+                    })
+            
             else:
-                return Response(
-                    {
-                        "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                        "message": "No Profile found",
-                    }
-                )
+                return Response({
+                    'status': 400,
+                    'message': "User Already Active, Please Contact administrator"
+                })
+            
 
-        return Response(
-            {"status": status.HTTP_400_BAD_REQUEST, "message": "No User Found"}
-        )
+
+
+
+# class UserVerificationViewSet(viewsets.GenericViewSet):
+#     serializer_class = LoginSerializer
+#     queryset = Profile.objects.filter(user__is_active=True)
+
+#     @action(detail=False, methods=["POST"])
+#     def verification(self, request):
+#         phone_number = request.data.get("phone_number")
+#         otp = request.data.get("otp")
+
+#         if phone_number and otp:
+#             profile = Profile.objects.filter(
+#                 phone_number__iexact=phone_number, otp__iexact=otp
+#             ).first()
+
+#             if (
+#                 profile
+#                 and profile.user is not None
+#                 and profile.otp_created_at is not None
+#             ):
+#                 expiration_time = profile.otp_created_at + timedelta(minutes=4)
+#                 current_time = timezone.now()
+
+#                 if current_time <= expiration_time:
+#                     user = profile.user
+#                     # token, created = Token.objects.get_or_create(user=user)
+#                     token, created = RefreshToken.for_user(user), True
+#                     serializer = VerificationSerializer(user, many=False)
+
+#                     access_token = Profile.objects.update(user_access_token=str(token))
+
+#                     user_access_token = profile.user_access_token
+#                     return Response(
+#                         {
+#                             "status": status.HTTP_200_OK,
+#                             "message": "OTP Verified successfully",
+#                             "data": serializer.data,
+#                             "token": str(token.access_token),
+#                             "refresh_token": user_access_token,
+#                             "expires_at": str(token.access_token.lifetime),
+#                         }
+#                     )
+
+#                 else:
+#                     return Response(
+#                         {
+#                             "status": status.HTTP_400_BAD_REQUEST,
+#                             "message": "OTP has Expired",
+#                         }
+#                     )
+
+#             return Response(
+#                 {
+#                     "status": status.HTTP_400_BAD_REQUEST,
+#                     "message": "Failed to verify OTP",
+#                 }
+#             )
+#         return Response(
+#             {"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Wrong inputs"}
+#         )
+
+
+# class GetUserAccessTokenAPIView(APIView):
+#     def get(self, request, pk):
+#         try:
+#             user = User.objects.get(id=pk)
+#         except User.DoesNotExist:
+#             return Response(
+#                 {"status": status.HTTP_400_BAD_REQUEST, "message": "No User found"}
+#             )
+
+#         refresh_token = RefreshToken.for_user(user)
+#         access_token = str(refresh_token.access_token)
+#         expires_in_seconds = int(refresh_token.access_token.lifetime.total_seconds())
+
+#         data = {
+#             "refresh_token": str(refresh_token),
+#             "access_token": access_token,
+#             "expires_at": expires_in_seconds,
+#         }
+
+#         serializer = RefreshTokenSerializer(data)
+#         return Response(serializer.data)
+
+
+# class RegenerateTokenViewSet(viewsets.GenericViewSet):
+#     serializer_class = LoginSerializer
+#     queryset = Profile.objects.filter(user__is_active=True)
+
+#     @action(detail=False, methods=["POST"])
+#     def mobile_regenerate_otp(self, request):
+#         data = request.data
+#         if not isinstance(data, dict):
+#             data = {"phone_number": str(data)}
+
+#         phone_number = data.get("phone_number")
+
+#         if phone_number:
+#             profile = Profile.objects.filter(
+#                 user__is_active=True,
+#                 is_deleted=False,
+#                 phone_number__iexact=phone_number,
+#             ).first()
+
+#             if profile is not None:
+#                 profile.otp = get_random_number()
+#                 profile.otp_created_at = timezone.now()
+#                 profile.save()
+
+#                 return Response(
+#                     {
+#                         "status": status.HTTP_200_OK,
+#                         "message": "New OTP Has Been sent",
+#                         "otp": profile.otp,
+#                     }
+#                 )
+#             else:
+#                 return Response(
+#                     {
+#                         "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                         "message": "No Profile found",
+#                     }
+#                 )
+
+#         return Response(
+#             {"status": status.HTTP_400_BAD_REQUEST, "message": "No User Found"}
+#         )
 
 
 class CategoriesListAPIView(APIView):
