@@ -61,27 +61,31 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
                 }
             )
 
-        if User.objects.filter(Q(first_name=first_name)).exists():
-            return Response(
-                {
-                    "status": status.HTTP_409_CONFLICT,
-                    "message": "First Name/last Name already exist",
-                }
-            )
+        # if User.objects.filter(Q(first_name=first_name)).exists():
+        #     return Response(
+        #         {
+        #             "status": status.HTTP_409_CONFLICT,
+        #             "message": "First Name/last Name already exist",
+        #         }
+        #     )
 
         if User.objects.filter(email=email).exists():
             return Response(
                 {"status": status.HTTP_409_CONFLICT, "message": "Email Already Exists"}
             )
 
-        username = f"{first_name}.{last_name}"
-        if User.objects.filter(username=username).exists():
-            return Response(
-                {
-                    "status": status.HTTP_409_CONFLICT,
-                    "message": "Username Already Exists",
-                }
-            )
+        base_username = f"{first_name}.{last_name}".lower()
+        username = base_username
+        num = 1
+
+        while User.objects.filter(username=username).exists():
+            username = f"{username}{num}"
+            num += 1
+
+        # if User.objects.filter(username=username).exists():
+        #     user = User.objects.filter(username=username).first()
+        #     user.username = f"{username} + 11"
+
 
         # password = get_user_model().objects.make_random_password()
         try:
@@ -142,6 +146,7 @@ class LoginAPIView(APIView):
             u = User.objects.filter(email=email).first()
             username = u.username
             user = authenticate(username=username, password=password)
+            print("==========user", user)
             if user is not None:
                 if user.is_active:
                     # user_serializer = UserSerializer(user, many=False)
@@ -258,58 +263,44 @@ class VerificationViewSet(viewsets.GenericViewSet):
         email = request.data.get("email")
         otp = request.data.get("otp")
 
-        if email and otp:
-            print(f"===============payload {email}-{otp}")
-            profile = Profile.objects.filter(user__email__iexact=email, otp=otp).first()
-            if (profile and profile.user is not None and profile.otp_created_at is not None and profile.otp_is_expired==False):
-                expiration_time = profile.otp_created_at + timedelta(minutes=5)
-                current_time = timezone.now()
-
-                if current_time <= expiration_time:
-                    user = profile.user
-                    user.is_active=True
-                    user.save()
-                    token, created = RefreshToken.for_user(user), True
-                    serializer = VerificationSerializer(user, many=False)
-
-                    access_token = Profile.objects.update(user_access_token=str(token))
-
-                    user_access_token = profile.user_access_token
-                    profile.otp_is_expired = True
-                    profile.save()
-                    return Response(
-                        {
-                            "status": status.HTTP_200_OK,
-                            "message": "OTP Verified successfully",
-                            "data": serializer.data,
-                            "token": str(token.access_token),
-                            "refresh_token": user_access_token,
-                            "expires_at": str(token.access_token.lifetime),
-                        }
-                    )
-                else:
-                    return Response(
-                        {
-                            "status": status.HTTP_400_BAD_REQUEST,
-                            "message": "OTP has Expired",
-                        }
-                    )
-            return Response(
-                {
-                    "status": status.HTTP_400_BAD_REQUEST,
-                    "message": "Failed to verify OTP",
-                }
-            )
+        if not email and not otp:
+            return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "Email and OTP must be provided"})
         
-        return Response(
-            {"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Invalid OTP"}
-        )
+        profile = Profile.objects.filter(user__email__iexact=email, otp=otp).first()
+
+        if not profile:
+            return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "Profile not found or OTP incorrect"})
+        
+        expiration_time = profile.otp_created_at + timedelta(minutes=4)
+        if timezone.now() > expiration_time:
+            return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': 'OTP has expired'})
+        
+        user = profile.user
+        user.is_active = True
+        user.save
+
+        refresh = RefreshToken.for_user(user)
+        profile.user_access_token = str(refresh.access_token)
+        profile.save()
+
+        serializer = self.get_serializer(user)
+
+        return Response({
+            "status": status.HTTP_200_OK,
+            "message": "OTP verified successfully",
+            "data": serializer.data,
+            "token": str(refresh.access_token),
+            "refresh_token": str(refresh),
+            "expires_at": str(refresh.access_token.lifetime)
+        }, status=status.HTTP_200_OK)
 
 
 class RegenerateExpiredOTPAPIView(APIView):
     
     def put(self, request):
-        email = request.data.get("email")
+        print("==================step 1")
+        print(request.data)
+        email = request.data
         if email:
             user = User.objects.get(email=email)
             if not user.is_active:
