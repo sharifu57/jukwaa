@@ -46,6 +46,7 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("docs/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    # end of the lines url
 ]
 from django.conf.urls.static import static
 
