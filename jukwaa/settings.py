@@ -27,6 +27,7 @@ BASE_URL = "https://2vjejl.api.infobip.com"
 
 OTP_SECRET_KEY = "NzkyNDE0NDRiZDA3NmJmMDgwOGU0M2MzNzYzNzIyZDM3ZDk2YzBlZTMwNDkwMTkxYjYxYjllMWIxMWYwY2Q2Mw=="
 OTP_API_KEY = "68c9d2854d3ffcbb"
+MAINTENANCE_MODE = None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,7 +56,7 @@ INSTALLED_APPS = [
     "djoser",
     "phonenumbers",
     "django_otp",
-    "django_otp.plugins.otp_totp",
+    # "django_otp.plugins.otp_totp",
     "base",
     "backend",
     "blog",
