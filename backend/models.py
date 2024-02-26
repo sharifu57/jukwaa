@@ -1,5 +1,5 @@
 from django.db import models
-from base.models import BaseModel, Category, Skill, Location
+from base.models import BaseModel, Category, Skill, Location, Employer
 from django.contrib.auth.models import User
 
 
@@ -49,7 +49,7 @@ class Project(BaseModel):
     skills = models.ManyToManyField(Skill, blank=True, null=True)
     duration = models.CharField(max_length=300, blank=True, null=True)
     created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True
+        Employer, on_delete=models.SET_NULL, null=True, blank=True
     )
     currency = models.IntegerField(
         choices=PROJECT_CURRENCY, default=1, null=True, blank=True

@@ -288,9 +288,6 @@ class GetAllProjectsAPiView(APIView):
         min_amount = request.GET.get("min")
         max_amount = request.GET.get("max")
 
-        print("==================categories")
-        print(category_ids)
-        print("=================end categories")
         if category_ids:
             projects = projects.filter(category__id__in=category_ids)
         if location_id:

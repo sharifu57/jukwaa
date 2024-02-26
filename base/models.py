@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import RegexValidator
-
+import pendulum
 
 class BaseModel(models.Model):
     is_active = models.BooleanField(default=True)
@@ -67,9 +67,17 @@ class Profile(BaseModel):
         instance.profile.save()
 
 
+CATEGORY_COLOR = (
+    ("blue", "blue"),
+    ("red", "red"),
+    ("orange", "orange"),
+    ("yellow", "yellow")
+)
+
 class Category(BaseModel):
     name = models.CharField(max_length=300, blank=True, null=True)
     code = models.CharField(max_length=300, blank=True, null=True)
+    color = models.CharField(choices=CATEGORY_COLOR, max_length=300, null=True, blank=True, default="blue")
 
     def __str__(self):
         return self.name
@@ -92,4 +100,28 @@ class Location(BaseModel):
     def __str__(self):
         return self.name
 
+COMPANY_SIZES = (
+    (1, "1 to 50"),
+    (2, "50 to 200"),
+    (3, "more than 200")
+)
+
+COMPANY_STATUS = (
+    (1, "Active"),
+    (2, "Pending"),
+    (3, "Deactive")
+)
+class Employer(BaseModel):
+    name = models.CharField(max_length=300, null=True, blank=True)
+    industry = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
+    company_size = models.IntegerField(choices=COMPANY_SIZES, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    phone_number = models.CharField(max_length=300, blank=True, null=True)
+    website_url = models.CharField(max_length=300, blank=True, null=True)
+    status = models.IntegerField(choices=COMPANY_STATUS, blank=True, null=True)
+
+    def __str__(self):
+        
+        return self.name
 
