@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81db07-1ca9-4866-af74-28c181b02c3e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/migrations/0017_alter_project_created_by.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/base/migrations/0014_employer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +49,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Projects/RCMIS/RCMIS-CORE-V2",
+    "last_opened_file_path": "C:/Projects/JK/jukwaa",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,6 +67,7 @@
       <updated>1703917084952</updated>
       <workItem from="1707542105832" duration="646000" />
       <workItem from="1707710779950" duration="111000" />
+      <workItem from="1708956323466" duration="1563000" />
     </task>
     <servers />
   </component>

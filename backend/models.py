@@ -49,7 +49,7 @@ class Project(BaseModel):
     skills = models.ManyToManyField(Skill, blank=True, null=True)
     duration = models.CharField(max_length=300, blank=True, null=True)
     created_by = models.ForeignKey(
-        Employer, on_delete=models.SET_NULL, null=True, blank=True
+        "base.Employer", on_delete=models.SET_NULL, null=True, blank=True
     )
     currency = models.IntegerField(
         choices=PROJECT_CURRENCY, default=1, null=True, blank=True
@@ -85,3 +85,18 @@ class Bid(BaseModel):
 
     def __str__(self):
         return f"Bid for {self.bidder.username}"
+
+
+class Testimonial(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Testimonial"
+        verbose_name_plural = "Testimonials"
+
+    def __str__(self):
+        return f"Testimonial for {self.user.email}"
+
+
+
