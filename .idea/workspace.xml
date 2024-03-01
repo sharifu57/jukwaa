@@ -5,10 +5,44 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81db07-1ca9-4866-af74-28c181b02c3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/migrations/0017_alter_project_created_by.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/base/migrations/0014_employer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0002_alter_project_duration.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0003_bid.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0004_alter_bid_project.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0005_project_application_deadline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0006_alter_project_application_deadline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0007_alter_project_application_deadline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0008_alter_project_application_deadline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0009_project_projectid.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0010_project_status.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0011_bid_email.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0012_alter_bid_email.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0013_remove_bid_email_bid_duration.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0014_alter_project_category.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0015_project_location.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0016_project_payment_status_alter_project_status.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/migrations/0017_alter_project_created_by.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0002_category_title.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0003_remove_category_title_profile_title.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0004_alter_profile_phone_number.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0005_profile_user_access_token.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0006_profile_projectid_profile_rate.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0007_remove_profile_projectid.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0008_remove_profile_location.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0009_profile_is_email_verified.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0010_alter_profile_otp_created_at.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0011_profile_otp_is_expired.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0012_category_color.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0013_alter_category_color.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0014_employer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,24 +73,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Projects/JK/jukwaa",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/JK/jukwaa&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,7 +101,13 @@
       <updated>1703917084952</updated>
       <workItem from="1707542105832" duration="646000" />
       <workItem from="1707710779950" duration="111000" />
-      <workItem from="1708956323466" duration="1563000" />
+      <workItem from="1708956323466" duration="2764000" />
+      <workItem from="1709120205491" duration="28000" />
+      <workItem from="1709143407451" duration="503000" />
+      <workItem from="1709147202304" duration="601000" />
+      <workItem from="1709205001765" duration="53000" />
+      <workItem from="1709220991534" duration="424000" />
+      <workItem from="1709275845728" duration="3562000" />
     </task>
     <servers />
   </component>

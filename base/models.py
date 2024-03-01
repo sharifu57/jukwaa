@@ -125,3 +125,25 @@ class Employer(BaseModel):
         
         return self.name
 
+class Team(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=300, null=True, blank=True)
+    avatar = models.ImageField(upload_to="team_avatars", null=True, blank=True)
+
+    def __str__(self):
+
+        return self.user.username
+
+
+
+
+
+
+
+
+
+
+
+
+
+

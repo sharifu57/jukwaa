@@ -507,3 +507,20 @@ class GetAllUsersAPIView(APIView):
         users = User.objects.filter(is_active=True).order_by('-last_login')
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
+
+
+class AllTeamAPIView(APIView):
+    def get(self, request):
+        teams = Team.objects.filter(is_active=True)
+        serializer = TeamSerializer(teams, many=True)
+        return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+

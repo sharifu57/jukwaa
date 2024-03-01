@@ -83,3 +83,17 @@ class RefreshTokenSerializer(serializers.Serializer):
 #     class Meta:
 #         model = Project
 #         fields = "__all__"
+
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = "__all__"
+
+
+
+
+
+
+
+
+
