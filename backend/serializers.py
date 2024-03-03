@@ -3,6 +3,8 @@ from backend.models import *
 from base.models import *
 from django.contrib.auth.models import User
 from base.serializers import *
+import hashlib
+from backend.utils import *
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -39,10 +41,18 @@ class ProjectsListSerializer(serializers.ModelSerializer):
     bids = BidSerializer(many=True, read_only=True)
     created_by = UserSerializer()
     category = CategorySerializer()
+    encrypted_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
         fields = "__all__"
+
+    def get_encrypted_id(self, obj):
+        """
+        This method is called for the `encrypted_id` field.
+        """
+        return encrypt_id(obj.id)
+
 
 class BidListSerializer(serializers.ModelSerializer):
     bidder = LoginSerializer()
@@ -50,3 +60,7 @@ class BidListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
         fields = "__all__"
+
+    def get_encrypted_id(self, obj):
+        """Returns the encrypted ID for the Project instance."""
+        return encrypt_id(obj.id)

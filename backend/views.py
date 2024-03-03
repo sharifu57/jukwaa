@@ -281,26 +281,6 @@ class GetAllProjectsAPiView(APIView):
             is_active=True, is_deleted=False
         ).order_by("-created")
         projectsPerPage = 10
-        # data = request.GET
-        #
-        # print("==================data", data)
-        # category_ids = request.GET.getlist("category_ids")
-        # location_id = request.GET.get("location_id")
-        # min_amount = request.GET.get("min")
-        # max_amount = request.GET.get("max")
-        #
-        # if category_ids:
-        #     projects = projects.filter(category__id__in=category_ids)
-        # if location_id:
-        #     projects = projects.filter(location__id=location_id)
-        # if min_amount:
-        #     projects = projects.filter(
-        #         Q(budget__price_from__gte=min_amount) | Q(amount__gte=min_amount)
-        #     )
-        # if max_amount:
-        #     projects = projects.filter(
-        #         Q(budget__price_to__lte=max_amount) | Q(amount__lte=max_amount)
-        #     )
 
         if projects:
             paginator = PageNumberPagination()
@@ -404,19 +384,35 @@ class CreatePaymentAPIView(APIView):
 # end the handling of the payment logics
 
 class GetOneProjectAPIView(APIView):
-    def get(self, request, projectId):
+    def get(self, request, encrypted_project_id):
         try:
-            project = Project.objects.get(id=projectId)
+            try:
+                # Decrypt the projectId to get the original ID
+                project_id = decrypt_id(encrypted_project_id)
 
-            if project:
-                serializer = ProjectsListSerializer(project, many=False)
-                return Response(serializer.data)
+                print("-----------descrypt", project_id)
+                project = Project.objects.get(id=project_id)
 
-            else:
-                return Response({'status': 400, 'message': 'Failed to get Data'})
+                if project:
+                    serializer = ProjectsListSerializer(project, many=False)
+                    return Response(serializer.data)
+                else:
+                    return Response({'status': 400, 'message': 'Failed to get Data'})
 
-        except Project.DoesNotExist:
-            return Response({'status': 400, 'message': 'No Project Available'})
+            except Project.DoesNotExist:
+                return Response({'status': 400, 'message': 'No Project Available'})
+
+
+        except Exception as e:
+
+            # Log the exception to console or a log file; adjust as needed for your setup
+
+            print(f"Error occurred: {e.__class__.__name__}: {str(e)}")
+
+            # Return a more informative error response
+
+            return Response({'status': 500, 'message': f'Error: {e.__class__.__name__}: {str(e)}'})
+
 
 class UpdateProjectStatusAPIView(APIView):
     def put(self, request, projectId):
