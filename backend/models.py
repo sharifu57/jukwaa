@@ -28,16 +28,15 @@ PAYMENT_STATUS = (
 
 
 class Budget(BaseModel):
-    name = models.CharField(max_length=300, blank=True, null=True)
-    price_from = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+    price_from = models.CharField(
+        max_length=300, blank=True, null=True
     )
-    price_to = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+    price_to = models.CharField(
+        max_length=300, blank=True, null=True
     )
 
     def __str__(self):
-        return f"{self.name}-({self.price_from} - {self.price_to})"
+        return f"{self.price_from} - {self.price_to}"
 
 
 class Project(BaseModel):

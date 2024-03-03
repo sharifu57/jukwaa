@@ -280,30 +280,31 @@ class GetAllProjectsAPiView(APIView):
         projects = Project.objects.filter(
             is_active=True, is_deleted=False
         ).order_by("-created")
-        data = request.GET
-
-        print("==================data", data)
-        category_ids = request.GET.getlist("category_ids")
-        location_id = request.GET.get("location_id")
-        min_amount = request.GET.get("min")
-        max_amount = request.GET.get("max")
-
-        if category_ids:
-            projects = projects.filter(category__id__in=category_ids)
-        if location_id:
-            projects = projects.filter(location__id=location_id)
-        if min_amount:
-            projects = projects.filter(
-                Q(budget__price_from__gte=min_amount) | Q(amount__gte=min_amount)
-            )
-        if max_amount:
-            projects = projects.filter(
-                Q(budget__price_to__lte=max_amount) | Q(amount__lte=max_amount)
-            )
+        projectsPerPage = 10
+        # data = request.GET
+        #
+        # print("==================data", data)
+        # category_ids = request.GET.getlist("category_ids")
+        # location_id = request.GET.get("location_id")
+        # min_amount = request.GET.get("min")
+        # max_amount = request.GET.get("max")
+        #
+        # if category_ids:
+        #     projects = projects.filter(category__id__in=category_ids)
+        # if location_id:
+        #     projects = projects.filter(location__id=location_id)
+        # if min_amount:
+        #     projects = projects.filter(
+        #         Q(budget__price_from__gte=min_amount) | Q(amount__gte=min_amount)
+        #     )
+        # if max_amount:
+        #     projects = projects.filter(
+        #         Q(budget__price_to__lte=max_amount) | Q(amount__lte=max_amount)
+        #     )
 
         if projects:
             paginator = PageNumberPagination()
-            # paginator.page_size = 10
+            paginator.page_size = projectsPerPage
             result_page = paginator.paginate_queryset(projects, request)
             serializer = ProjectsListSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
