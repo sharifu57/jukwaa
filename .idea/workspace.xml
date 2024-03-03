@@ -5,43 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81db07-1ca9-4866-af74-28c181b02c3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/base/migrations/0002_employer_company_logo.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/company_logos/Screenshot_2024-02-19_151645.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/team_avatars/Screenshot_2024-02-19_151645.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/team_avatars/logos.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/team_avatars/pngegg.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0002_alter_project_duration.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0003_bid.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0004_alter_bid_project.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0005_project_application_deadline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0006_alter_project_application_deadline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0007_alter_project_application_deadline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0008_alter_project_application_deadline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0009_project_projectid.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0010_project_status.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0011_bid_email.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0012_alter_bid_email.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0013_remove_bid_email_bid_duration.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0014_alter_project_category.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0015_project_location.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0016_project_payment_status_alter_project_status.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/migrations/0017_alter_project_created_by.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/base/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0002_category_title.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0003_remove_category_title_profile_title.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0004_alter_profile_phone_number.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0005_profile_user_access_token.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0006_profile_projectid_profile_rate.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0007_remove_profile_projectid.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0008_remove_profile_location.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0009_profile_is_email_verified.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0010_alter_profile_otp_created_at.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0011_profile_otp_is_expired.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0012_category_color.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0013_alter_category_color.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/0014_employer.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -108,6 +81,7 @@
       <workItem from="1709205001765" duration="53000" />
       <workItem from="1709220991534" duration="424000" />
       <workItem from="1709275845728" duration="3562000" />
+      <workItem from="1709382953234" duration="5644000" />
     </task>
     <servers />
   </component>

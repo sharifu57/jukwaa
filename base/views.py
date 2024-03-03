@@ -516,6 +516,11 @@ class AllTeamAPIView(APIView):
         return Response(serializer.data)
 
 
+class GetCompaniesLogoAPIView(APIView):
+    def get(self, request):
+        employers = Employer.objects.filter(is_active=True, is_deleted=False)
+        serializer = EmployersLogoSerializer(employers, many=True)
+        return Response(serializer.data)
 
 
 

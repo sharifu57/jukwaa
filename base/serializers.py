@@ -85,11 +85,15 @@ class RefreshTokenSerializer(serializers.Serializer):
 #         fields = "__all__"
 
 class TeamSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     class Meta:
         model = Team
         fields = "__all__"
 
-
+class EmployersLogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employer
+        fields = ('name', 'company_logo')
 
 
 

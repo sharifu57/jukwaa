@@ -120,6 +120,7 @@ class Employer(BaseModel):
     phone_number = models.CharField(max_length=300, blank=True, null=True)
     website_url = models.CharField(max_length=300, blank=True, null=True)
     status = models.IntegerField(choices=COMPANY_STATUS, blank=True, null=True)
+    company_logo = models.ImageField(upload_to="company_logos", null=True, blank=True)
 
     def __str__(self):
         

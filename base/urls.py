@@ -28,5 +28,7 @@ urlpatterns = [
     # ),
     path('locations/', GetLocationsAPiView.as_view(), name="locations"),
     path("users/", GetAllUsersAPIView.as_view(), name="users"),
-    path("regenerate_otp/", RegenerateExpiredOTPAPIView.as_view(), name="regenerate_otp")
+    path("regenerate_otp/", RegenerateExpiredOTPAPIView.as_view(), name="regenerate_otp"),
+    path("team/", AllTeamAPIView.as_view(), name="team"),
+    path("employers_logo/", GetCompaniesLogoAPIView.as_view(), name="employers_logo")
 ]
