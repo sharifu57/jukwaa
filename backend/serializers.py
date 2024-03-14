@@ -41,6 +41,7 @@ class ProjectsListSerializer(serializers.ModelSerializer):
     bids = BidSerializer(many=True, read_only=True)
     created_by = UserSerializer()
     category = CategorySerializer()
+    # employer = EmployerSerializer()
     encrypted_id = serializers.SerializerMethodField()
 
     class Meta:

@@ -21,14 +21,12 @@ urlpatterns = [
     path("login/", LoginAPIView.as_view(), name="login"),
     path("categories/", CategoriesListAPIView.as_view(), name="categories"),
     path("skills/<int:category_id>/", SkillsListAPIView.as_view(), name="skills"),
-    # path(
-    #     "user_accessToken/<int:pk>/",
-    #     GetUserAccessTokenAPIView.as_view(),
-    #     name="user_access_token",
-    # ),
     path('locations/', GetLocationsAPiView.as_view(), name="locations"),
     path("users/", GetAllUsersAPIView.as_view(), name="users"),
     path("regenerate_otp/", RegenerateExpiredOTPAPIView.as_view(), name="regenerate_otp"),
     path("team/", AllTeamAPIView.as_view(), name="team"),
-    path("employers_logo/", GetCompaniesLogoAPIView.as_view(), name="employers_logo")
+    path("employers_logo/", GetCompaniesLogoAPIView.as_view(), name="employers_logo"),
+    path("reset_password/", ResetPasswordAPIView.as_view(), name="reset_password"),
+    path("reset_password_confirm/<uidb64>/<token>/", ResetNewPasswordConfirmAPIView.as_view(), name="password_reset_confirm"),
+    path('set-new-password/', SetNewPasswordAPIView.as_view(), name='set_new_password'),
 ]

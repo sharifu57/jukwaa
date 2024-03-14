@@ -248,7 +248,7 @@ class ProjectBiddersAPIView(APIView):
 
         bidders = Bid.objects.filter(
             project_id=project, is_active=True, is_deleted=False
-        ).exclude(bidder__profile__bio__isnull=True)
+        ).exclude(bidder__profile__bio__isnull=False)
         serializer = BidListSerializer(bidders, many=True)
 
         return Response({"status": 200, "message": "success", "data": serializer.data})
@@ -435,4 +435,13 @@ class UpdateProjectStatusAPIView(APIView):
         else:
             return Response({'status': 400, 'message': 'Invalid Status Input'})
 
+class UserTotalPostedProjectsAPIView(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        projects = Project.objects.filter(created_by=user.id, is_active=True, is_deleted=False)
+        serializer = ProjectsListSerializer(projects, many=True)
+        return Response({'status': status.HTTP_200_OK, 'data': serializer.data})
 

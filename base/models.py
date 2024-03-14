@@ -112,6 +112,8 @@ COMPANY_STATUS = (
     (3, "Deactive")
 )
 class Employer(BaseModel):
+    # when user is employers, then will have an employer profile which is one to one for saving his data
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=300, null=True, blank=True)
     industry = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     company_size = models.IntegerField(choices=COMPANY_SIZES, blank=True, null=True)

@@ -70,15 +70,15 @@ urlpatterns = [
         CreatePaymentAPIView.as_view(),
         name="create_payment"
     ),
-    # path(
-    #     'get_project/<str:encrypted_project_id>/',
-    #     GetOneProjectAPIView.as_view(),
-    #     name="view_one_project"
-    # ),
     re_path(r'^get_project/(?P<encrypted_project_id>.+)/$', GetOneProjectAPIView.as_view(), name='get_project'),
     path(
         'update_project_status/<int:projectId>/',
         UpdateProjectStatusAPIView.as_view(),
         name="update_project_status"
+    ),
+    path(
+        'user_projects/<int:user_id>/',
+        UserTotalPostedProjectsAPIView.as_view(),
+        name="user_projects"
     )
 ]
