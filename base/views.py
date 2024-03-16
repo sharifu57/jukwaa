@@ -232,7 +232,8 @@ class ResetPasswordAPIView(APIView):
                 token = default_token_generator.make_token(user)
                 # reset_link = reverse(f'$http://localhost:3000/change-password', kwargs={'uidb64': user.pk, 'token': token})
                 uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                reset_link = f'http://localhost:3000/change-password?token={token}&uidb64={uidb64}'
+                # reset_link = f'http://localhost:3000/change-password?token={token}&uidb64={uidb64}'
+                reset_link = f'http://localhost:3000/change-password/{token}/{uidb64}'
                 # Assume `reset_link` is correctly formed URL to frontend reset page
                 send_mail(
                     'Password Reset Request',
@@ -261,23 +262,35 @@ class ResetNewPasswordConfirmAPIView(APIView):
 
 class SetNewPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
+        data = request.data
+        print("=============my data")
+        print(data)
+        print("=============end my data")
+
         serializer = SetNewPasswordSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             try:
+                print("__________step one")
                 uid = urlsafe_base64_decode(serializer.validated_data['uidb64']).decode()
                 user = User.objects.get(pk=uid)
                 token = serializer.validated_data['token']
+
+                print("_______________token", token)
+                print("_________step 2")
                 if not default_token_generator.check_token(user, token):
-                    return Response({'error': 'Token is invalid or expired'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'Token is invalid or expired', 'status': status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
                 # Set the user in serializer context to use in save
+
+                print("=================user id", uid)
+
                 serializer.context['user'] = user
                 serializer.save()
-                return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
+                return Response({'message': 'Password has been reset successfully', 'status': status.HTTP_200_OK})
             except (TypeError, ValueError, OverflowError, User.DoesNotExist):
                 return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class RegenerateExpiredOTPAPIView(APIView):
-    
     def put(self, request):
         print("==================step 1")
         print(request.data)
@@ -371,12 +384,4 @@ class GetCompaniesLogoAPIView(APIView):
         employers = Employer.objects.filter(is_active=True, is_deleted=False)
         serializer = EmployersLogoSerializer(employers, many=True)
         return Response(serializer.data)
-
-
-
-
-
-
-
-
 

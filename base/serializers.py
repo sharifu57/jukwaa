@@ -2,10 +2,12 @@ from rest_framework import serializers
 from base.models import *
 from backend.models import *
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import Group
 from rest_framework_simplejwt.tokens import RefreshToken
 
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -114,15 +116,26 @@ class SetNewPasswordSerializer(serializers.Serializer):
     uidb64 = serializers.CharField(required=True)
 
     def validate(self, attrs):
-        self.user = self.context['request'].user
-        # Add your validation for token and uid here if needed
+        """
+        Here you can add any additional validation you might need.
+        For example, checking if the two passwords match.
+        """
+        if attrs['new_password1'] != attrs['new_password2']:
+            raise serializers.ValidationError("The two passwords must match.")
+
         return attrs
 
-    def save(self):
+    def save(self, **kwargs):
+        """
+        Update the user's password.
+        """
+        user = self.context['user']  # Get the user from the context
         password = self.validated_data['new_password1']
-        user = self.user
         user.set_password(password)
         user.save()
+        return user
+
+
 
 
 
