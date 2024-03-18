@@ -4,7 +4,43 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f81db07-1ca9-4866-af74-28c181b02c3e" name="Changes" comment="" />
+    <list default="true" id="4f81db07-1ca9-4866-af74-28c181b02c3e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/apps.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/_redirects" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/asset-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/ai.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/flag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/flag1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/flags/de.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/flags/en.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/image1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/image2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/reset.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/signin.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/images/signup.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/css/main.637bad79.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/js/3.2cb44d5e.chunk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/js/3.2cb44d5e.chunk.js.LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/js/522.5df46b93.chunk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/js/main.9a46f2e8.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/js/main.9a46f2e8.js.LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/media/slick.2630a3e3eab21c607e21.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/media/slick.295183786cd8a1389865.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/media/slick.a4e97f5a2a64f0ab1323.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jukwaa/static/frontend/static/media/slick.c94f7671dcc99dce43e2.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jukwaa/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/jukwaa/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jukwaa/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/jukwaa/urls.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,24 +70,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Projects/JK/jukwaa",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/JK/jukwaa&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -75,6 +111,7 @@
       <workItem from="1710213054974" duration="16635000" />
       <workItem from="1710385525188" duration="2128000" />
       <workItem from="1710479213381" duration="9749000" />
+      <workItem from="1710732330974" duration="3351000" />
     </task>
     <servers />
   </component>
