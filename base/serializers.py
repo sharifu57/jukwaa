@@ -109,6 +109,11 @@ class ResetPasswordEmailSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email']
 
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = "__all__"
+
 class SetNewPasswordSerializer(serializers.Serializer):
     new_password1 = serializers.CharField(required=True)
     new_password2 = serializers.CharField(required=True)
@@ -134,6 +139,7 @@ class SetNewPasswordSerializer(serializers.Serializer):
         user.set_password(password)
         user.save()
         return user
+
 
 
 

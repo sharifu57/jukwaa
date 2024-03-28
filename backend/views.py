@@ -47,7 +47,8 @@ class PostProjectAPIView(APIView):
             amount = data.get("amount")
             deadline = data.get("application_deadline")
             location = data.get("location")
-            # project_file = data.get("project_file")
+            budget = data.get("budget")
+            project_file = data.get("project_file")
 
         except Exception as e:
             return Response({"status": 404, "message": f"Error f{e}"})
@@ -74,6 +75,11 @@ class PostProjectAPIView(APIView):
             return Response({'status': 400, 'message': f"location error: {e}"})
 
         try:
+            budget_instance = Budget.objects.get(id=budget)
+        except Exception as e:
+            return Response({'status': 400, 'message': f"Budget error: {e}"})
+
+        try:
             project = Project.objects.create(
                 title=title,
                 description=description,
@@ -83,10 +89,11 @@ class PostProjectAPIView(APIView):
                 location=location_instance,
                 # currency=currency,
                 # payment_type=payment_type,
-                amount=amount,
+                # amount=amount,
+                budget=budget_instance,
                 application_deadline=deadline,
                 projectId=get_random_number(),
-                # project_file=project_file,
+                project_file=project_file,
             )
             email = user_instance.email
 
@@ -159,12 +166,15 @@ class GetProjectsByUserIdAPIView(APIView):
             )
 
         projects = Project.objects.filter(
-            created_by=user, is_active=True, is_deleted=False, status=3
-        )
+            created_by=user, is_active=True, is_deleted=False
+        ).order_by('-created')
 
         if projects:
-            serializer = ProjectsListSerializer(projects, many=True)
-            return Response(serializer.data)
+            paginator = PageNumberPagination()
+            paginator.page_size = 10
+            result_page = paginator.paginate_queryset(projects, request)
+            serializer = ProjectsListSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
 
         else:
             return Response(

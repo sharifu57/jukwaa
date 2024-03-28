@@ -29,4 +29,5 @@ urlpatterns = [
     path("reset_password/", ResetPasswordAPIView.as_view(), name="reset_password"),
     path("reset_password_confirm/<uidb64>/<token>/", ResetNewPasswordConfirmAPIView.as_view(), name="password_reset_confirm"),
     path('set-new-password/', SetNewPasswordAPIView.as_view(), name='set_new_password'),
+    path('experiences/', GetExperienceAPIView.as_view(), name="experiences")
 ]

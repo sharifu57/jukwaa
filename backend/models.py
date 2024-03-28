@@ -26,6 +26,16 @@ PAYMENT_STATUS = (
     (1, "Paid")
 )
 
+EXPERIENCE_OF_FREELANCERS = (
+    (0, '1 year'),
+    (1, '2 years')
+)
+
+SIZE_OF_PROJECT = (
+    (1, 'Small'),
+    (2, 'Medium')
+)
+
 
 class Budget(BaseModel):
     price_from = models.CharField(
@@ -62,6 +72,8 @@ class Project(BaseModel):
     amount = models.CharField(max_length=300, null=True, blank=True)
     location = models.ForeignKey("base.Location", on_delete=models.SET_NULL, null=True, blank=True)
     projectId = models.CharField(max_length=300, null=True, blank=True)
+    experience = models.ForeignKey("base.Experience", on_delete=models.SET_NULL, null=True, blank=True)
+    size = models.IntegerField(choices=SIZE_OF_PROJECT, null=True, blank=True)
     status = models.IntegerField(choices=PROJECT_STATUS, default=0, null=True, blank=True)
     payment_status = models.IntegerField(choices=PAYMENT_STATUS, default=0, null=True, blank=True)
     project_file = models.FileField(upload_to="projects/", null=True, blank=True)

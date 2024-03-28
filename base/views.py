@@ -385,3 +385,9 @@ class GetCompaniesLogoAPIView(APIView):
         serializer = EmployersLogoSerializer(employers, many=True)
         return Response(serializer.data)
 
+
+class GetExperienceAPIView(APIView):
+    def get(self, request):
+        experiences = Experience.objects.filter(is_active=True, is_deleted=False)
+        serializer = ExperienceSerializer(experiences, many=True)
+        return Response(serializer.data)
