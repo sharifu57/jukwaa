@@ -38,7 +38,7 @@ class Profile(BaseModel):
     user_type = models.IntegerField(choices=USER_TYPE, default=1, null=True, blank=True)
     portfolio = models.JSONField(default=list, null=True, blank=True)
     category = models.ForeignKey(
-        "base.Category", on_delete=models.SET_NULL, null=True, blank=True
+        "base.Category", on_delete=models.SET_NULL, null=True, blank=True, related_name="profile"
     )
     # location = models.ForeignKey(
     #     "base.Location", on_delete=models.CASCADE, null=True, blank=True

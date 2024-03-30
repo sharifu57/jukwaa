@@ -333,10 +333,8 @@ class CategoriesListAPIView(APIView):
         categories = Category.objects.filter(is_active=True, is_deleted=False).order_by(
             "name"
         )
-
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
-
 
 class SkillsListAPIView(APIView):
     def get(self, request, category_id):

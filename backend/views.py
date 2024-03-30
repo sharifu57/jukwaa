@@ -15,7 +15,7 @@ from xml.etree import ElementTree as ET
 # from services.payment_data import  ProcessPaymentData
 from backend.services.payment_data import ProcessPaymentData, TigopesaPayment
 from django.http import HttpResponse
-
+from django.db.models import Prefetch, Count
 
 # Create your views here.
 
@@ -266,23 +266,48 @@ class ProjectBiddersAPIView(APIView):
 
 class GetProjectsByCategoryAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        categories_with_projects = Category.objects.prefetch_related("project").filter(
-            is_active=True, is_deleted=False
-        )
+        categories_with_projects_and_profiles = Category.objects.annotate(
+            projects_count=Count('project', distinct=True),
+            profiles_count=Count('profile', distinct=True)
+        ).filter(is_active=True, is_deleted=False)
 
         serializer_data = []
-        for category in categories_with_projects:
+        for category in categories_with_projects_and_profiles:
             category_data = {
                 "id": category.id,
                 "name": category.name,
-                "projects": [
-                    {"id": project.id, "title": project.title}
-                    for project in category.project.all()
-                ],
+                "projects_count": category.projects_count,  # Number of projects in this category
+                "profiles_count": category.profiles_count,  # Number of profiles in this category
+                # "projects": [
+                #     {"id": project.id, "title": project.title}
+                #     for project in category.project.all()
+                # ],
             }
             serializer_data.append(category_data)
 
         return Response(serializer_data)
+
+
+
+# class GetProjectsByCategoryAPIView(APIView):
+#     def get(self, request, *args, **kwargs):
+#         categories_with_projects = Category.objects.prefetch_related("project").filter(
+#             is_active=True, is_deleted=False
+#         )
+
+#         serializer_data = []
+#         for category in categories_with_projects:
+#             category_data = {
+#                 "id": category.id,
+#                 "name": category.name,
+#                 "projects": [
+#                     {"id": project.id, "title": project.title}
+#                     for project in category.project.all()
+#                 ],
+#             }
+#             serializer_data.append(category_data)
+
+#         return Response(serializer_data)
 
 
 class GetAllProjectsAPiView(APIView):
