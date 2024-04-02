@@ -1,8 +1,8 @@
-version: "3"
+version: '3.8'
 
 services:
   db:
-    image: postgres:14
+    image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -10,19 +10,17 @@ services:
       POSTGRES_USER: jukwaa
       POSTGRES_PASSWORD: jukwaa%100
 
-  backend:
-    restart: "always"
+  web:
     build: .
-    environment:
-      IP: 127.0.0.1
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/jukwaa
-    command: bash -c "python manage.py runserver 0.0.0.0:8005"
-    container_name: jukwaa
-    image: jukwaa
+      - .:/code
     ports:
       - "8005:8005"
-    networks:
-      - webnet
-networks:
-  webnet:
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://jukwaa:jukwaa%100@db:5432/jukwaa
+
+volumes:
+  postgres_data:
