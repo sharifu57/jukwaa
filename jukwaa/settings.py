@@ -32,6 +32,8 @@ MAINTENANCE_MODE = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 HOST_IP = "109.199.108.165"
+
+# print empty
 ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
 
