@@ -12,7 +12,6 @@ import random
 from backend.utils import *
 from rest_framework.pagination import PageNumberPagination
 from xml.etree import ElementTree as ET
-# from services.payment_data import  ProcessPaymentData
 from backend.services.payment_data import ProcessPaymentData, TigopesaPayment
 from django.http import HttpResponse
 from django.db.models import Prefetch, Count
@@ -58,7 +57,6 @@ class PostProjectAPIView(APIView):
         except Exception as e:
             return Response({"status": 404, "message": f"Category Error: {e}"})
 
-        print("===========skills", skills)
         try:
             skills_instance = list(Skill.objects.filter(id__in=skills))
         except Exception as e:
@@ -288,28 +286,6 @@ class GetProjectsByCategoryAPIView(APIView):
         return Response(serializer_data)
 
 
-
-# class GetProjectsByCategoryAPIView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         categories_with_projects = Category.objects.prefetch_related("project").filter(
-#             is_active=True, is_deleted=False
-#         )
-
-#         serializer_data = []
-#         for category in categories_with_projects:
-#             category_data = {
-#                 "id": category.id,
-#                 "name": category.name,
-#                 "projects": [
-#                     {"id": project.id, "title": project.title}
-#                     for project in category.project.all()
-#                 ],
-#             }
-#             serializer_data.append(category_data)
-
-#         return Response(serializer_data)
-
-
 class GetAllProjectsAPiView(APIView):
     def get(self, request):
         projects = Project.objects.filter(
@@ -409,11 +385,9 @@ class CreatePaymentAPIView(APIView):
         data = request.body
         # print("==============data", data)
         try:
-            print("==============success")
             paymentData = ProcessPaymentData().sync_billpay(request)
             return HttpResponse(paymentData, content_type='text/xml')
         except Exception as e:
-            print("===========fail here")
             error_response = ProcessPaymentData().generate_error_response("error100", "General Error")
             return HttpResponse(error_response, content_type='text/xml', status=404)
 # end the handling of the payment logics
