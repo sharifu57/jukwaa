@@ -1,6 +1,6 @@
 import random
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+# from Crypto.Cipher import AES
+# from Crypto.Util.Padding import pad, unpad
 import base64
 import os
 from cryptography.fernet import Fernet
@@ -15,7 +15,7 @@ def generate_secret_key():
 class EncryptionHelper:
     # Ensure the key is 16, 24, or 32 bytes long
     SECRET_KEY = generate_secret_key()
-    BLOCK_SIZE = AES.block_size
+    # BLOCK_SIZE = AES.block_size
 
     @staticmethod
     def encrypt(text):
