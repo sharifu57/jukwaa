@@ -31,8 +31,8 @@ MAINTENANCE_MODE = None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# HOST_IP = "192.168.1.111"
-HOST_IP = "172.23.176.1"
+HOST_IP = "192.168.1.111"
+# HOST_IP = "172.23.176.1"
 ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
 
