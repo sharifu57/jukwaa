@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: jukwaa
       POSTGRES_USER: jukwaa
       POSTGRES_PASSWORD: jukwaa%100
+    ports:
+      - "5432:5432"
 
   web:
     build: .
