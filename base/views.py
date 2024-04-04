@@ -40,6 +40,7 @@ import jwt
 from base.common import get_random_number, send_otp_email, get_otp_number
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.conf import settings
 
 
 class UserRegisterViewSet(viewsets.GenericViewSet):
@@ -233,7 +234,7 @@ class ResetPasswordAPIView(APIView):
                 # reset_link = reverse(f'$http://localhost:3000/change-password', kwargs={'uidb64': user.pk, 'token': token})
                 uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
                 # reset_link = f'http://localhost:3000/change-password?token={token}&uidb64={uidb64}'
-                reset_link = f'http://localhost:3000/change-password/{token}/{uidb64}'
+                reset_link = f'http://{settings.FRONT_END_ADD}/change-password/{token}/{uidb64}'
                 # Assume `reset_link` is correctly formed URL to frontend reset page
                 send_mail(
                     'Password Reset Request',
@@ -252,7 +253,7 @@ class ResetPasswordAPIView(APIView):
                     {'status': status.HTTP_404_NOT_FOUND,
                      'error': 'User with this email does not exist.'},
                     status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':serializer.errors, 'status':status.HTTP_400_BAD_REQUEST})
 
 
 class ResetNewPasswordConfirmAPIView(APIView):
