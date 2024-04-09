@@ -331,7 +331,7 @@ class GetAllProjectsListAPiView(APIView):
 
         if projects:
             paginator = PageNumberPagination()
-            paginator.page_size = 7
+            paginator.page_size = 10
             result_page = paginator.paginate_queryset(projects, request)
             serializer = ProjectsListSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
