@@ -206,7 +206,6 @@ class CreateBidAPIView(APIView):
 
             try:
                 user = User.objects.get(id=bidder)
-                print("-------------------user", user)
             except User.DoesNotExist:
                 return Response({"status": 400, "message": "No user Available"})
 
@@ -310,7 +309,7 @@ class GetAllProjectsListAPiView(APIView):
         ).order_by("-created")
         data = request.GET
 
-        print("==================data", data)
+        # print("==================data", data)
         category_ids = request.GET.getlist("category_ids")
         location_id = request.GET.get("location_id")
         min_amount = request.GET.get("min")
