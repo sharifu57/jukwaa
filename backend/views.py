@@ -197,6 +197,10 @@ class CreateBidAPIView(APIView):
     def post(self, request):
         data = request.data
 
+        print("=========print the data")
+        print(data)
+        print("========end print data")
+
         try:
             project = data.get("project")
             bidder = data.get("bidder")
@@ -214,15 +218,21 @@ class CreateBidAPIView(APIView):
             except Project.DoesNotExist:
                 return Response({"status": 400, "message": "Project Does not Exists"})
 
-            if Bid.objects.filter(
-                bidder_id=user.id, project_id=project_instance.id
-            ).exists:
+            bid_user = Bid.objects.filter(
+                is_active=True,
+                is_deleted=False,
+                bidder=user,
+                project=project_instance
+            )
+
+            if bid_user:
                 return Response(
                     {
-                        "status": 500,
-                        "message": "Sorry you already have a bid for this project",
+                        "status": status.HTTP_400_BAD_REQUEST,
+                        "message": "You have already bib for this project"
                     }
                 )
+
             else:
                 new_bid = Bid.objects.create(
                     project_id=project_instance.id,
@@ -237,7 +247,7 @@ class CreateBidAPIView(APIView):
                 return Response(
                     {
                         "status": 201,
-                        "message": "new bid created successfully",
+                        "message": "Your bid have been sent successfully",
                         "data": serializer.data,
                     }
                 )
@@ -392,34 +402,42 @@ class CreatePaymentAPIView(APIView):
 # end the handling of the payment logics
 
 class GetOneProjectAPIView(APIView):
-    def get(self, request, encrypted_project_id):
+    def get(self, request, project_id):
         try:
-            try:
-                # Decrypt the projectId to get the original ID
-                project_id = decrypt_id(encrypted_project_id)
+            project = Project.objects.get(id=project_id)
+        except Project.DoesNotExist:
+            return Response({'status': 400, 'message': 'project does not exist'})
 
-                print("-----------descrypt", project_id)
-                project = Project.objects.get(id=project_id)
+        serializer = ProjectsListSerializer(project, many=False)
+        return Response(serializer.data)
 
-                if project:
-                    serializer = ProjectsListSerializer(project, many=False)
-                    return Response(serializer.data)
-                else:
-                    return Response({'status': 400, 'message': 'Failed to get Data'})
-
-            except Project.DoesNotExist:
-                return Response({'status': 400, 'message': 'No Project Available'})
-
-
-        except Exception as e:
-
-            # Log the exception to console or a log file; adjust as needed for your setup
-
-            print(f"Error occurred: {e.__class__.__name__}: {str(e)}")
-
-            # Return a more informative error response
-
-            return Response({'status': 500, 'message': f'Error: {e.__class__.__name__}: {str(e)}'})
+        # try:
+        #     try:
+        #         # Decrypt the projectId to get the original ID
+        #         project_id = decrypt_id(encrypted_project_id)
+        #
+        #         print("-----------descrypt", project_id)
+        #         project = Project.objects.get(id=project_id)
+        #
+        #         if project:
+        #             serializer = ProjectsListSerializer(project, many=False)
+        #             return Response(serializer.data)
+        #         else:
+        #             return Response({'status': 400, 'message': 'Failed to get Data'})
+        #
+        #     except Project.DoesNotExist:
+        #         return Response({'status': 400, 'message': 'No Project Available'})
+        #
+        #
+        # except Exception as e:
+        #
+        #     # Log the exception to console or a log file; adjust as needed for your setup
+        #
+        #     print(f"Error occurred: {e.__class__.__name__}: {str(e)}")
+        #
+        #     # Return a more informative error response
+        #
+        #     return Response({'status': 500, 'message': f'Error: {e.__class__.__name__}: {str(e)}'})
 
 
 class UpdateProjectStatusAPIView(APIView):

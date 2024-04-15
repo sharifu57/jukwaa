@@ -90,13 +90,14 @@ class Bid(BaseModel):
     duration = models.CharField(max_length=300, null=True, blank=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     proposal = models.TextField(null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Bid"
         verbose_name_plural = "Bids"
 
     def __str__(self):
-        return f"Bid for {self.bidder.username}"
+        return f"Bid for {self.id}"
 
 
 # class Testimonial(BaseModel):

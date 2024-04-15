@@ -70,7 +70,8 @@ urlpatterns = [
         CreatePaymentAPIView.as_view(),
         name="create_payment"
     ),
-    re_path(r'^get_project/(?P<encrypted_project_id>.+)/$', GetOneProjectAPIView.as_view(), name='get_project'),
+    # re_path(r'^get_project/(?P<encrypted_project_id>.+)/$', GetOneProjectAPIView.as_view(), name='get_project'),
+    path('get_project/<int:project_id>/', GetOneProjectAPIView.as_view(), name="get_project"),
     path(
         'update_project_status/<int:projectId>/',
         UpdateProjectStatusAPIView.as_view(),
