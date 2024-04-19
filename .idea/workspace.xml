@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f81db07-1ca9-4866-af74-28c181b02c3e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/build/images/blog.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/static/js/main.04fa6057.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/static/js/main.04fa6057.js.LICENSE.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jukwaa/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/jukwaa/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/static/js/main.b9eae27d.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/static/js/main.b9eae27d.js.LICENSE.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
