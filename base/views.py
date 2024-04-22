@@ -400,3 +400,23 @@ class GetUserDetailsAPIView(APIView):
 
         serializer = RegisterResponseSerializer(user, many=False)
         return Response(serializer.data)
+
+
+class UpdateUserProfileImageAPIView(APIView):
+    def patch(self, request, user_id=None):
+        data = request.data
+        user_image = data.get('profile_image')
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': 'No User found'})
+
+        profile = Profile.objects.filter(user=user, is_active=True, is_deleted=False).first()
+
+        if profile:
+            profile.profile_image = user_image
+            profile.save()
+            serializer = UserProfileSerializer(profile, many=False)
+            return Response({'status': status.HTTP_200_OK, 'message': 'Successfully updated', 'data': serializer.data})
+
+        return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'No profile found for this user'})

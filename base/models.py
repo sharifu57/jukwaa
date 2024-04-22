@@ -23,6 +23,9 @@ class BaseModel(models.Model):
 
 USER_TYPE = ((1, "Freelancer"), (2, "Employer"))
 
+def profile_location(instance, filename, **kwargs):
+    file_path = f"profile_images/{filename}"
+    return file_path
 
 class Profile(BaseModel):
     user = models.OneToOneField(
@@ -51,7 +54,7 @@ class Profile(BaseModel):
     user_access_token = models.CharField(max_length=5000, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False, null=True, blank=True)
     profile_image = models.ImageField(
-        upload_to="profile_images/", null=True, blank=True
+        upload_to=profile_location, null=True, blank=True
     )
 
     def __str__(self):
