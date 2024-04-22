@@ -18,7 +18,10 @@ PROJECT_STATUS = (
     (1, "Pending"),
     (2, "In Review"),
     (3, "Approved"),
-    (4, "Rejected")
+    (4, "Rejected"),
+    (5, "On Going"),
+    (6, "Completed"),
+    (7, "Closed")
 )
 
 PAYMENT_STATUS = (

@@ -128,7 +128,6 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         token, created = RefreshToken.for_user(user), True
         # access_token = Profile.objects.update(user_access_token=str(token))
 
-        print("==============token", token)
         user_profile.user_access_token = str(token)
         user_profile.save()
         serializer = RegisterResponseSerializer(user)
@@ -389,4 +388,15 @@ class GetExperienceAPIView(APIView):
     def get(self, request):
         experiences = Experience.objects.filter(is_active=True, is_deleted=False)
         serializer = ExperienceSerializer(experiences, many=True)
+        return Response(serializer.data)
+
+
+class GetUserDetailsAPIView(APIView):
+    def get(self, request, user_id=None):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': 'No user Available'})
+
+        serializer = RegisterResponseSerializer(user, many=False)
         return Response(serializer.data)
