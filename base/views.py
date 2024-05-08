@@ -49,13 +49,15 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=["POST"])
     def register(self, request):
+        print("====request data")
+        print(request.data)
         email = request.data.get("email")
         first_name = request.data.get("firstName")
         last_name = request.data.get("lastName")
         user_type = request.data.get("userType")
         category = request.data.get("category")
         phone_number = request.data.get("phoneNumber")
-        is_accepted_term = request.data.get("is_accepted_term")
+        # is_accepted_term = request.data.get("is_accepted_term")
         password = request.data.get("password")
         
 
@@ -132,7 +134,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         user_profile.save()
         serializer = RegisterResponseSerializer(user)
         return Response(
-            {"status": status.HTTP_201_CREATED, "message": "Successfully Created", "data": serializer.data}
+            {"status": status.HTTP_201_CREATED, "message": "Successfully Created", "data": serializer.data}, status.HTTP_201_CREATED
         )
 
 

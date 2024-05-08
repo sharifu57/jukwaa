@@ -30,6 +30,7 @@ class BudgetSerializer(serializers.ModelSerializer):
 
 
 class BidSerializer(serializers.ModelSerializer):
+    bidder = UserProfileSerializer()
     class Meta:
         model = Bid
         fields = "__all__"

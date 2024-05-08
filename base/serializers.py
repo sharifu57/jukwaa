@@ -21,9 +21,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ["first_name", "username", "last_name", "email", "password"]
 
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = "__all__"
+
 class UserProfileSerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
     class Meta:
         model = Profile
+        fields = "__all__"
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
         fields = "__all__"
 
 class RegisterResponseSerializer(serializers.ModelSerializer):
@@ -66,13 +77,6 @@ class VerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
-
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = "__all__"
-
 
 class RefreshTokenSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()
