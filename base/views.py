@@ -187,6 +187,7 @@ class VerificationViewSet(viewsets.GenericViewSet):
         email = request.data.get("email")
         otp = request.data.get("otp")
 
+
         if not email and not otp:
             return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "Email and OTP must be provided"})
         
@@ -294,9 +295,11 @@ class SetNewPasswordAPIView(APIView):
 
 class RegenerateExpiredOTPAPIView(APIView):
     def put(self, request):
-        print("==================step 1")
+        email = request.data.get('email')
+
+        print("========request data")
         print(request.data)
-        email = request.data
+        print("========end request data")
         if email:
             user = User.objects.get(email=email)
             if not user.is_active:
