@@ -27,7 +27,7 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    location = LocationSerializer()
+    # location = LocationSerializer()
     class Meta:
         model = Profile
         fields = "__all__"
