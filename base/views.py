@@ -133,6 +133,8 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         user_profile.user_access_token = str(token)
         user_profile.save()
         serializer = RegisterResponseSerializer(user)
+
+        print("-------testing end end end")
         return Response(
             {"status": status.HTTP_201_CREATED, "message": "Successfully Created", "data": serializer.data}, status.HTTP_201_CREATED
         )
