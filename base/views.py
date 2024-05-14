@@ -140,6 +140,9 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
 
 class LoginAPIView(APIView):
     def post(self, request, *args, **kwargs):
+        print("=========start user login")
+        print(request.data)
+        print("========end user login")
         email_or_username = request.data.get("email", "").strip()
         password = request.data.get("password", "").strip()
 
