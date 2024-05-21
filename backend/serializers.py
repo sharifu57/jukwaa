@@ -44,6 +44,7 @@ class ProjectsListSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     # employer = EmployerSerializer()
     encrypted_id = serializers.SerializerMethodField()
+    experience = ExperienceSerializer()
 
     class Meta:
         model = Project

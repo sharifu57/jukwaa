@@ -144,7 +144,10 @@ class SetNewPasswordSerializer(serializers.Serializer):
         user.save()
         return user
 
-
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = "__all__"
 
 
 
