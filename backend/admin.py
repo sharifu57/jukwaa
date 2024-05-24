@@ -5,3 +5,4 @@ from backend.models import *
 admin.site.register(Project)
 admin.site.register(Budget)
 admin.site.register(Bid)
+admin.site.register(Duration)

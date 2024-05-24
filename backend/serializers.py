@@ -35,6 +35,12 @@ class BidSerializer(serializers.ModelSerializer):
         model = Bid
         fields = "__all__"
 
+class DurationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Duration
+        fields = "__all__"
+
+
 class ProjectsListSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     skills = SkillsSerializer(many=True)
@@ -45,6 +51,7 @@ class ProjectsListSerializer(serializers.ModelSerializer):
     # employer = EmployerSerializer()
     encrypted_id = serializers.SerializerMethodField()
     experience = ExperienceSerializer()
+    duration = DurationSerializer()
 
     class Meta:
         model = Project

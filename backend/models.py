@@ -59,7 +59,7 @@ class Project(BaseModel):
         Category, on_delete=models.CASCADE, null=True, blank=True, related_name="project"
     )
     skills = models.ManyToManyField(Skill, blank=True, null=True)
-    duration = models.CharField(max_length=300, blank=True, null=True)
+    duration = models.ForeignKey("backend.Duration", on_delete=models.CASCADE, null=True, blank=True)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -80,17 +80,23 @@ class Project(BaseModel):
     status = models.IntegerField(choices=PROJECT_STATUS, default=0, null=True, blank=True)
     payment_status = models.IntegerField(choices=PAYMENT_STATUS, default=0, null=True, blank=True)
     project_file = models.FileField(upload_to="projects/", null=True, blank=True)
+    is_applied = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}"
 
 
+class Duration(BaseModel):
+    title = models.CharField(max_length=300, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 class Bid(BaseModel):
     project = models.ForeignKey(
         Project, on_delete=models.SET_NULL, blank=True, null=True, related_name="bids"
     )
     bidder = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    duration = models.CharField(max_length=300, null=True, blank=True)
+    duration = models.ForeignKey("backend.Duration", on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     proposal = models.TextField(null=True, blank=True)
     message = models.TextField(null=True, blank=True)

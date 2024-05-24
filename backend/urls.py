@@ -81,5 +81,10 @@ urlpatterns = [
         'user_projects/<int:user_id>/',
         UserTotalPostedProjectsAPIView.as_view(),
         name="user_projects"
+    ),
+    path(
+        'durations/',
+        GetAllDurationsAPIView.as_view(),
+        name="durations"
     )
 ]

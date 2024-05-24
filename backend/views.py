@@ -484,3 +484,8 @@ class GetProjectBiddersAPIView(APIView):
         except Project.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class GetAllDurationsAPIView(APIView):
+    def get(self, request):
+        durations = Duration.objects.filter(is_active=True, is_deleted=False)
+        serializer = DurationSerializer(durations, many=True)
+        return Response(serializer.data)
