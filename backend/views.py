@@ -255,9 +255,11 @@ class CreateBidAPIView(APIView):
                     duration_id=duration_instance.id,
                     amount=amount,
                     proposal=proposal,
-                    attachment=attachment
+                    attachment=attachment,
+                    identity=str(user.id)
                 )
 
+                
                 new_bid.save()
                 serializer = BidSerializer(new_bid, many=False)
                 return Response(
