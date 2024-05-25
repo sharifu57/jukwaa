@@ -226,7 +226,7 @@ class CreateBidAPIView(APIView):
                 print("=====================print duration instance =================")
                 print(duration_instance)
                 print("---------------end duration instance---------------")
-                
+
             except Duration.DoesNotExist:
                 return Response({"status": 400, "message": "Duration Does not Exists"})
             
@@ -262,13 +262,13 @@ class CreateBidAPIView(APIView):
                 serializer = BidSerializer(new_bid, many=False)
                 return Response(
                     {
-                        "status": 201,
+                        "status": status.HTTP_201_CREATED,
                         "message": "Your bid have been sent successfully",
                         "data": serializer.data,
                     }
                 )
         except Exception as e:
-            return Response({"status": 400, "message": f"{e}"})
+            return Response({"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": f"{e}"})
 
 
 
