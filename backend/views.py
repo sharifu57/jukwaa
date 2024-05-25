@@ -207,6 +207,8 @@ class CreateBidAPIView(APIView):
             duration = data.get("duration")
             amount = data.get("amount")
             proposal = data.get("proposal")
+            attachment = data.get("attachment")
+
 
             try:
                 user = User.objects.get(id=bidder)
@@ -218,11 +220,24 @@ class CreateBidAPIView(APIView):
             except Project.DoesNotExist:
                 return Response({"status": 400, "message": "Project Does not Exists"})
 
+            try:
+                duration_instance = Duration.objects.get(id=duration)
+
+                print("=====================print duration instance =================")
+                print(duration_instance)
+                print("---------------end duration instance---------------")
+                
+            except Duration.DoesNotExist:
+                return Response({"status": 400, "message": "Duration Does not Exists"})
+            
             bid_user = Bid.objects.filter(
                 is_active=True,
                 is_deleted=False,
                 bidder=user,
-                project=project_instance
+                project=project_instance,
+                # duration=duration_instance,
+                # proposal=proposal,
+                # attachment=attachment,
             )
 
             if bid_user:
@@ -237,9 +252,10 @@ class CreateBidAPIView(APIView):
                 new_bid = Bid.objects.create(
                     project_id=project_instance.id,
                     bidder_id=user.id,
-                    duration=duration,
+                    duration_id=duration_instance.id,
                     amount=amount,
                     proposal=proposal,
+                    attachment=attachment
                 )
 
                 new_bid.save()
@@ -253,6 +269,7 @@ class CreateBidAPIView(APIView):
                 )
         except Exception as e:
             return Response({"status": 400, "message": f"{e}"})
+
 
 
 class ProjectBiddersAPIView(APIView):

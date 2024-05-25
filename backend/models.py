@@ -100,6 +100,8 @@ class Bid(BaseModel):
     amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     proposal = models.TextField(null=True, blank=True)
     message = models.TextField(null=True, blank=True)
+    is_accepted = models.BooleanField(default=False, null=True, blank=True)
+    attachment = models.FileField(null=True, blank=True, upload_to="attachments/")
 
     class Meta:
         verbose_name = "Bid"
