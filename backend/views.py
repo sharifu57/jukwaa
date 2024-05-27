@@ -133,12 +133,18 @@ class GetMatchProjectsAPIView(APIView):
                 {"status": status.HTTP_400_BAD_REQUEST, "message": "Failed"}
             )
 
+        # projects = (
+        #     Project.objects.filter(
+        #         category_id=category, is_active=True, is_deleted=False, status=3
+        #     )
+        #     .exclude(application_deadline=pendulum.today())
+        #     .order_by("-created")
+        # )
+
         projects = (
             Project.objects.filter(
-                category_id=category, is_active=True, is_deleted=False, status=3
-            )
-            .exclude(application_deadline=pendulum.today())
-            .order_by("-created")
+                category_id=category, is_active=True, is_deleted=False
+            ).order_by("-created")
         )
 
         if projects:
