@@ -86,5 +86,10 @@ urlpatterns = [
         'durations/',
         GetAllDurationsAPIView.as_view(),
         name="durations"
+    ),
+    path(
+        'my_bids/<int:bidder_id>/',
+        GetMyBidsAPIView.as_view(),
+        name="my_bids"
     )
 ]

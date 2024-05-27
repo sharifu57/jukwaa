@@ -514,3 +514,18 @@ class GetAllDurationsAPIView(APIView):
         durations = Duration.objects.filter(is_active=True, is_deleted=False)
         serializer = DurationSerializer(durations, many=True)
         return Response(serializer.data)
+
+class GetMyBidsAPIView(APIView):
+    def get(self, request, bidder_id):
+        try:
+            user = User.objects.get(id=bidder_id)
+        except Exception as e:
+            return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': f"{e}"})
+        bids = Bid.objects.filter(
+            is_active=True,
+            is_deleted=False,
+            bidder_id=user.id
+        ).order_by('-created')
+
+        serializer = BidListSerializer(bids, many=True)
+        return Response(serializer.data)
