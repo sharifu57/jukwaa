@@ -13,6 +13,13 @@ PROJECT_BUDGET = (
     (3, "Custom"),
 )
 
+BID_STATUS = (
+    (0, "Submitted"),
+    (1, "In Review"),
+    (2, "Success"),
+    (3, "Denied")
+)
+
 PROJECT_STATUS = (
     (0, "New"),
     (1, "Pending"),
@@ -100,6 +107,7 @@ class Bid(BaseModel):
     amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     proposal = models.TextField(null=True, blank=True)
     message = models.TextField(null=True, blank=True)
+    status = models.IntegerField(choices=BID_STATUS, null=True, blank=True, default=0)
     identity = models.CharField(null=True, blank=True, max_length=30)
     is_accepted = models.BooleanField(default=False, null=True, blank=True)
     attachment = models.FileField(null=True, blank=True, upload_to="attachments/")
