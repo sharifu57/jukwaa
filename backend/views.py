@@ -78,11 +78,16 @@ class PostProjectAPIView(APIView):
             return Response({'status': 400, 'message': f"Budget error: {e}"})
 
         try:
+            duration_instance = Duration.objects.get(id=duration)
+        except Experience as e:
+            return Response({'status': 400, 'message': f"Duration error: {e}"})
+
+        try:
             project = Project.objects.create(
                 title=title,
                 description=description,
                 category=category_instance,
-                duration=duration,
+                duration=duration_instance,
                 created_by=user_instance,
                 location=location_instance,
                 # currency=currency,
