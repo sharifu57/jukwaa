@@ -43,6 +43,7 @@ class RegisterResponseSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'first_name', 'last_name', 'username', 'profile']
 
+
 class LoginSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
 
@@ -150,6 +151,11 @@ class ExperienceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
+class ForgotPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email']
 
 
 

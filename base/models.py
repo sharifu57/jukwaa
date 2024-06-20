@@ -53,6 +53,9 @@ class Profile(BaseModel):
     is_accepted_term = models.BooleanField(default=False, null=True, blank=True)
     user_access_token = models.CharField(max_length=5000, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False, null=True, blank=True)
+    password_otp = models.CharField(max_length=10, null=True, blank=True)
+    password_otp_created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    password_otp_is_expired = models.BooleanField(default=False, null=True, blank=True)
     profile_image = models.ImageField(
         upload_to=profile_location, null=True, blank=True
     )

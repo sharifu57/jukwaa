@@ -31,6 +31,6 @@ urlpatterns = [
     path('set-new-password/', SetNewPasswordAPIView.as_view(), name='set_new_password'),
     path('experiences/', GetExperienceAPIView.as_view(), name="experiences"),
     path('user_details/<str:user_id>/', GetUserDetailsAPIView.as_view(), name="userDetails"),
-    path('update_profile_image/<int:user_id>/', UpdateUserProfileImageAPIView.as_view(), name="profileImage")
-# path('update_profile_image/<int:user_id>/', UpdateUserProfileImageAPIView.as_view(), name="profileImage")
+    path('update_profile_image/<int:user_id>/', UpdateUserProfileImageAPIView.as_view(), name="profileImage"),
+    path('forgot_password/', ForgotPasswordAPIView.as_view(), name="forgot_password")
 ]

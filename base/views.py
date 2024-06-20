@@ -278,6 +278,40 @@ class ResetNewPasswordConfirmAPIView(APIView):
         return
 
 
+class ForgotPasswordAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+
+            if email:
+                user = User.objects.get(email = email)
+
+                if user.is_active:
+                    profile = Profile.objects.filter(user__email__iexact=email).first()
+
+                    if profile:
+                        profile_instance = Profile.objects.get(id=profile.id)
+                        my_otp = get_otp_number()
+                        profile_instance.password_otp = my_otp
+                        profile_instance.password_otp_created_at = timezone.now()
+                        profile_instance.save()
+
+                        send_mail(
+                            'FORGOT PASSWORD',
+                            f'PleasE enter this OTP to proceed to next stage: {my_otp}',
+                            'from@example.com',
+                            [email],
+                            fail_silently=False,
+                        )
+
+                        return Response({'status': status.HTTP_200_OK, 'message': 'OTP sent to email'})
+                    
+                    return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Not Found'})
+                return Response({'status': status.HTTP_423_LOCKED, 'message': "User not active"})
+            return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
+
+
 class SetNewPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -307,6 +341,8 @@ class SetNewPasswordAPIView(APIView):
             except (TypeError, ValueError, OverflowError, User.DoesNotExist):
                 return Response({'error': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class RegenerateExpiredOTPAPIView(APIView):
     def put(self, request):
