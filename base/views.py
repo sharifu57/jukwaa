@@ -281,8 +281,10 @@ class ResetNewPasswordConfirmAPIView(APIView):
 class ForgotPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ForgotPasswordSerializer(data=request.data)
+        print("-------serialier: %s" % serializer)
         if serializer.is_valid():
             email = serializer.validated_data['email']
+            print("=======email is %s" % email)
 
             if email:
                 user = User.objects.get(email = email)
@@ -310,7 +312,7 @@ class ForgotPasswordAPIView(APIView):
                     return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Not Found'})
                 return Response({'status': status.HTTP_423_LOCKED, 'message': "User not active"})
             return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
-
+        return Response({'status': status.HTTP_404_NOT_FOUND, 'message':"Not Valid"})
 
 class SetNewPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
