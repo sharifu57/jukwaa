@@ -281,25 +281,17 @@ class ResetNewPasswordConfirmAPIView(APIView):
 class SetNewPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
-        print("=============my data")
-        print(data)
-        print("=============end my data")
 
         serializer = SetNewPasswordSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             try:
-                print("__________step one")
                 uid = urlsafe_base64_decode(serializer.validated_data['uidb64']).decode()
                 user = User.objects.get(pk=uid)
                 token = serializer.validated_data['token']
 
-                print("_______________token", token)
-                print("_________step 2")
                 if not default_token_generator.check_token(user, token):
                     return Response({'message': 'Token is invalid or expired', 'status': status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
                 # Set the user in serializer context to use in save
-
-                print("=================user id", uid)
 
                 serializer.context['user'] = user
                 serializer.save()
@@ -314,9 +306,6 @@ class RegenerateExpiredOTPAPIView(APIView):
     def put(self, request):
         email = request.data.get('email')
 
-        print("========request data")
-        print(request.data)
-        print("========end request data")
         if email:
             user = User.objects.get(email=email)
             if not user.is_active:
@@ -504,6 +493,25 @@ class VerifyPasswordOTPAPIView(APIView):
                     return Response({'status': status.HTTP_400_BAD_REQUEST,'message': 'OTP has expired'})
             
                 else:
+                    profile.password_otp_is_expired = True
+                    profile.save()
                     return Response({'status': status.HTTP_202_ACCEPTED, 'message': "Email Successfully Validated"})
             except Profile.DoesNotExist:
                 return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "Profile Not Found"})
+            
+class ResetPasswordAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        email = data.get('email', None)
+        password = data.get('password', None)
+
+        if not email and not password:
+            return Response({'status': status.HTTP_400_BAD_REQUEST,'message': "Email and Password must be provided"})
+        
+        else:
+            try:
+                user = User.objects.get(email=email)
+                user.password = password
+                user.save()
+            except User.DoesNotExist:
+                return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "User Not Found"})
