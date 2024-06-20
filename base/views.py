@@ -503,10 +503,9 @@ class ResetPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetSerializer(data=request.data)
 
-        if serializer.is_valid:
-            email = serializer.validated_data["email"]
-            password = serializer.validated_data["password"]
-
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
             try:
                 user = User.objects.get(email=email)
                 user.set_password(password)
