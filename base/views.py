@@ -501,18 +501,19 @@ class VerifyPasswordOTPAPIView(APIView):
             
 class ResetPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        data = request.data
-        email = data.get('email', None)
-        password = data.get('password', None)
+        serializer = PasswordResetSerializer(data=request.data)
 
-        if not email and not password:
-            return Response({'status': status.HTTP_400_BAD_REQUEST,'message': "Email and Password must be provided"})
-        
-        else:
+        if serializer.is_valid:
+            email = serializer.validated_data["email"]
+            password = serializer.validated_data["password"]
+
             try:
                 user = User.objects.get(email=email)
-                user.password = password
+                user.set_password(password)
                 user.save()
-                return Response({'status': status.HTTP_202_ACCEPTED, 'message': "Password Successfully Reset"})
+                return Response({'status': status.HTTP_202_ACCEPTED, 'message': "Password Successfully Changed."})
             except User.DoesNotExist:
                 return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "User Not Found"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+        
