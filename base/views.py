@@ -276,46 +276,7 @@ class ResetPasswordAPIView(APIView):
 class ResetNewPasswordConfirmAPIView(APIView):
     def post(self, request):
         return
-
-
-class ForgotPasswordAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = ForgotPasswordSerializer(data=request.data)
-        print("-------serialier: %s" % serializer)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            print("=======email is %s" % email)
-
-            if email:
-                try:
-                    user = User.objects.get(email = email)
-
-                    if user.is_active:
-                        profile = Profile.objects.filter(user__email__iexact=email).first()
-
-                        if profile:
-                            profile_instance = Profile.objects.get(id=profile.id)
-                            my_otp = get_otp_number()
-                            profile_instance.password_otp = my_otp
-                            profile_instance.password_otp_created_at = timezone.now()
-                            profile_instance.save()
-
-                            send_mail(
-                                'FORGOT PASSWORD',
-                                f'PleasE enter this OTP to proceed to next stage: {my_otp}',
-                                'from@example.com',
-                                [email],
-                                fail_silently=False,
-                            )
-
-                            return Response({'status': status.HTTP_200_OK, 'message': 'OTP sent to email'})
-                        
-                        return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Not Found'})
-                    return Response({'status': status.HTTP_423_LOCKED, 'message': "User not active"})
-                except User.DoesNotExist:
-                    return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
-            return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
-        return Response({'status': status.HTTP_404_NOT_FOUND, 'message':"Not Valid"})
+   
 
 class SetNewPasswordAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -481,3 +442,68 @@ class UpdateUserProfileImageAPIView(APIView):
             return Response({'status': status.HTTP_200_OK, 'message': 'Successfully updated', 'data': serializer.data})
 
         return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'No profile found for this user'})
+
+
+class ForgotPasswordAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        print("-------serialier: %s" % serializer)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            print("=======email is %s" % email)
+
+            if email:
+                try:
+                    user = User.objects.get(email = email)
+
+                    if user.is_active:
+                        profile = Profile.objects.filter(user__email__iexact=email).first()
+
+                        if profile:
+                            profile_instance = Profile.objects.get(id=profile.id)
+                            my_otp = get_otp_number()
+                            profile_instance.password_otp = my_otp
+                            profile_instance.password_otp_created_at = timezone.now()
+                            profile_instance.save()
+
+                            send_mail(
+                                'FORGOT PASSWORD',
+                                f'PleasE enter this OTP to proceed to next stage: {my_otp}',
+                                'from@example.com',
+                                [email],
+                                fail_silently=False,
+                            )
+
+                            return Response({'status': status.HTTP_200_OK, 'message': 'OTP sent to email'})
+                        
+                        return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Not Found'})
+                    return Response({'status': status.HTTP_423_LOCKED, 'message': "User not active"})
+                except User.DoesNotExist:
+                    return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
+            return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
+        return Response({'status': status.HTTP_404_NOT_FOUND, 'message':"Not Valid"})
+
+class VerifyPasswordOTPAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = VerifyPasswordOTPSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            otp = serializer.validated_data['otp']
+
+            if not email and not otp:
+                return Response({'status': status.HTTP_400_BAD_REQUEST,'message': "Email and OTP must be provided"})
+
+            else:
+                profile = Profile.objects.filter(user__email__iexact=email, password_otp=otp).first()
+                print(profile)
+                if not profile:
+                    return Response({'status': status.HTTP_400_BAD_REQUEST,'message': "Profile not found or OTP incorrect"})
+                
+                expiration_time = profile.password_otp_created_at + timedelta(minutes=4)
+                if timezone.now() > expiration_time:
+                    return Response({'status': status.HTTP_400_BAD_REQUEST,'message': 'OTP has expired'})
+            
+                else:
+                    return Response({'status': status.HTTP_202_ACCEPTED, 'message': "Email Successfully Validated"})
+
+         
