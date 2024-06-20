@@ -287,30 +287,33 @@ class ForgotPasswordAPIView(APIView):
             print("=======email is %s" % email)
 
             if email:
-                user = User.objects.get(email = email)
+                try:
+                    user = User.objects.get(email = email)
 
-                if user.is_active:
-                    profile = Profile.objects.filter(user__email__iexact=email).first()
+                    if user.is_active:
+                        profile = Profile.objects.filter(user__email__iexact=email).first()
 
-                    if profile:
-                        profile_instance = Profile.objects.get(id=profile.id)
-                        my_otp = get_otp_number()
-                        profile_instance.password_otp = my_otp
-                        profile_instance.password_otp_created_at = timezone.now()
-                        profile_instance.save()
+                        if profile:
+                            profile_instance = Profile.objects.get(id=profile.id)
+                            my_otp = get_otp_number()
+                            profile_instance.password_otp = my_otp
+                            profile_instance.password_otp_created_at = timezone.now()
+                            profile_instance.save()
 
-                        send_mail(
-                            'FORGOT PASSWORD',
-                            f'PleasE enter this OTP to proceed to next stage: {my_otp}',
-                            'from@example.com',
-                            [email],
-                            fail_silently=False,
-                        )
+                            send_mail(
+                                'FORGOT PASSWORD',
+                                f'PleasE enter this OTP to proceed to next stage: {my_otp}',
+                                'from@example.com',
+                                [email],
+                                fail_silently=False,
+                            )
 
-                        return Response({'status': status.HTTP_200_OK, 'message': 'OTP sent to email'})
-                    
-                    return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Not Found'})
-                return Response({'status': status.HTTP_423_LOCKED, 'message': "User not active"})
+                            return Response({'status': status.HTTP_200_OK, 'message': 'OTP sent to email'})
+                        
+                        return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Not Found'})
+                    return Response({'status': status.HTTP_423_LOCKED, 'message': "User not active"})
+                except User.DoesNotExist:
+                    return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
             return Response({'status': status.HTTP_404_NOT_FOUND, 'message': 'Email not found'})
         return Response({'status': status.HTTP_404_NOT_FOUND, 'message':"Not Valid"})
 
