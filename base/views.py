@@ -513,5 +513,6 @@ class ResetPasswordAPIView(APIView):
                 user = User.objects.get(email=email)
                 user.password = password
                 user.save()
+                return Response({'status': status.HTTP_202_ACCEPTED, 'message': "Password Successfully Reset"})
             except User.DoesNotExist:
                 return Response({'status': status.HTTP_400_BAD_REQUEST, 'message': "User Not Found"})
