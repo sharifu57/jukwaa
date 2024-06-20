@@ -486,9 +486,10 @@ class ForgotPasswordAPIView(APIView):
 class VerifyPasswordOTPAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = VerifyPasswordOTPSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            otp = serializer.validated_data['otp']
+        data = request.data
+        if data:
+            email = data.get('email', None)
+            otp = data.get('otp', None)
 
             if not email and not otp:
                 return Response({'status': status.HTTP_400_BAD_REQUEST,'message': "Email and OTP must be provided"})
@@ -506,4 +507,5 @@ class VerifyPasswordOTPAPIView(APIView):
                 else:
                     return Response({'status': status.HTTP_202_ACCEPTED, 'message': "Email Successfully Validated"})
 
-         
+        else:
+            return Response({'status': status.HTTP_400_BAD_REQUEST,'message': "Data not valid"})
