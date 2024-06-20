@@ -485,7 +485,7 @@ class ForgotPasswordAPIView(APIView):
 
 class VerifyPasswordOTPAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = VerifyPasswordOTPSerializer(data=request.data)
+        # serializer = VerifyPasswordOTPSerializer(data=request.data)
         data = request.data
         if data:
             email = data.get('email', None)

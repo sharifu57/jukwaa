@@ -158,10 +158,10 @@ class ForgotPasswordSerializer(serializers.ModelSerializer):
         fields = ['email']
 
 
-class VerifyPasswordOTPSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ["email", "password_otp"]
+# class VerifyPasswordOTPSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Profile
+#         fields = ["email", "password_otp"]
 
 
 
