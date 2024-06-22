@@ -331,7 +331,9 @@ class GetProjectsByCategoryAPIView(APIView):
 class GetAllProjectsAPiView(APIView):
     def get(self, request):
         projects = Project.objects.filter(
-            is_active=True, is_deleted=False
+            is_active=True, 
+            is_deleted=False,
+            status=3
         ).order_by("-created")
         projectsPerPage = 10
 

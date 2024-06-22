@@ -443,7 +443,7 @@ class ForgotPasswordAPIView(APIView):
 
             if email:
                 try:
-                    user = User.objects.get(email = email)
+                    user = User.objects.get(email=email)
 
                     if user.is_active:
                         profile = Profile.objects.filter(user__email__iexact=email).first()
