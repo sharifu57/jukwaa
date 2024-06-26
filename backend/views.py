@@ -539,3 +539,19 @@ class GetMyBidsAPIView(APIView):
 
         serializer = BidListSerializer(bids, many=True)
         return Response(serializer.data)
+    
+class GetMyProjectsAPIView(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        projects = Project.objects.filter(
+            created_by_id=user.id, 
+            is_active=True, 
+            is_deleted=False
+        ).order_by('-created')
+
+        serializer = ProjectsListSerializer(projects, many=True)
+        return Response({'status': status.HTTP_200_OK, 'data': serializer.data})

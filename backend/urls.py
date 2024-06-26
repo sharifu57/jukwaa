@@ -91,5 +91,10 @@ urlpatterns = [
         'my_bids/<int:bidder_id>/',
         GetMyBidsAPIView.as_view(),
         name="my_bids"
-    )
+    ),
+    path(
+        'my_projects/<int:user_id>/',
+        GetMyProjectsAPIView.as_view(),
+        name="my_projects"
+    ),
 ]
