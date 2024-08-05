@@ -97,4 +97,19 @@ urlpatterns = [
         GetMyProjectsAPIView.as_view(),
         name="my_projects"
     ),
+    path(
+        'system_projects/',
+        SystemProjectsAPIView.as_view(),
+        name="system_projects"
+    ),
+    path(
+        'recent_projects/',
+        getRecentProjectsAPIView.as_view(),
+        name="recent_projects"
+    ),
+    path(
+        'update_project_status/<int:project_id>/<str:project_status>/',
+        UpdateProjectStatusAPIView.as_view(),
+        name="update_project_status"
+    ),
 ]

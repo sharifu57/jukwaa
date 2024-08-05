@@ -32,10 +32,10 @@ MAINTENANCE_MODE = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 PRODUCTION = False
-# HOST_IP = "109.199.108.165"
-HOST_IP = "172.23.176.1"
+HOST_IP = "85.190.243.96"
+# HOST_IP = "192.168.0.166"
 FRONT_END_ADD = "172.23.176.1"
-
+# APPEND_SLASH = False
 # print empty
 ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
@@ -94,6 +94,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',

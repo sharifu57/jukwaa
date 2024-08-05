@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from base.serializers import *
 import hashlib
 from backend.utils import *
+from base.serializers import LocationSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):

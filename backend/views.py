@@ -15,6 +15,8 @@ from xml.etree import ElementTree as ET
 from backend.services.payment_data import ProcessPaymentData, TigopesaPayment
 from django.http import HttpResponse
 from django.db.models import Prefetch, Count
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
 
@@ -296,9 +298,14 @@ class ProjectBiddersAPIView(APIView):
         except Project.DoesNotExist:
             return Response({"status": 400, "message": "project does not exists"})
 
+        # bidders = Bid.objects.filter(
+        #     project_id=project, is_active=True, is_deleted=False
+        # ).exclude(bidder__profile__bio__isnull=True)
+
         bidders = Bid.objects.filter(
             project_id=project, is_active=True, is_deleted=False
-        ).exclude(bidder__profile__bio__isnull=True)
+        ).order_by('-created')
+
         serializer = BidListSerializer(bidders, many=True)
 
         return Response({"status": 200, "message": "success", "data": serializer.data})
@@ -541,6 +548,7 @@ class GetMyBidsAPIView(APIView):
         return Response(serializer.data)
     
 class GetMyProjectsAPIView(APIView):
+    
     def get(self, request, user_id):
         try:
             user = User.objects.get(id=user_id)
@@ -555,3 +563,118 @@ class GetMyProjectsAPIView(APIView):
 
         serializer = ProjectsListSerializer(projects, many=True)
         return Response({'status': status.HTTP_200_OK, 'data': serializer.data})
+
+
+class ProjectPagination(PageNumberPagination):
+    page_size = 10  # Default number of projects per page
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
+class SystemProjectsAPIView(APIView):
+    def get(self, request):
+        projects = Project.objects.filter(
+            is_active=True,
+            is_deleted=False,
+        ).order_by('-created')
+
+        paginator = ProjectPagination()
+        paginated_projects = paginator.paginate_queryset(projects, request)
+        serializer = ProjectsListSerializer(paginated_projects, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
+
+class getRecentProjectsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        projects = Project.objects.filter(
+            is_active=True,
+            is_deleted=False,
+
+        ).exclude(status=3).order_by('-created')
+
+        serializer = ProjectsListSerializer(projects, many=False)
+        return Response({'status': status.HTTP_200_OK, 'data': serializer.data})
+
+class UpdateProjectStatusAPIView(APIView):
+    def put(self, request, project_id, project_status):
+        try:
+            project = Project.objects.filter(
+                id=project_id,
+                is_active=True,
+                is_deleted=False  # Assuming you meant is_deleted instead of id_deleted
+            ).first()
+
+            if not project:
+                return Response(
+                    {
+                        'status': status.HTTP_400_BAD_REQUEST,
+                        'message': 'No project available'
+                    }
+                )
+
+            if project_status == "1":
+                project.status = project_status
+                project.save()
+                return Response(
+                    {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Project Processed Successfully'
+                    }
+                )
+
+            if project_status == "3":
+                project.status = project_status
+                project.save()
+                return Response(
+                    {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Project Approved Successfully'
+                    }
+                )
+
+            if project_status == "4":
+                project.status = project_status
+                project.save()
+                return Response(
+                    {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Project Rejected'
+                    }
+                )
+
+            if project_status == "6":
+                project.status = project_status
+                project.save()
+                return Response(
+                    {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Completed'
+                    }
+                )
+
+            if project_status == "7":
+                project.status = project_status
+                project.save()
+                return Response(
+                    {
+                        'status': status.HTTP_200_OK,
+                        'message': 'Closed'
+                    }
+                )
+
+            return Response(
+                {
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Invalid Request'
+                }
+            )
+
+        except Exception as e:
+            return Response(
+                {
+                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    'message': str(e)
+                }
+            )
+
