@@ -30,7 +30,7 @@ OTP_API_KEY = "68c9d2854d3ffcbb"
 MAINTENANCE_MODE = None
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 # PRODUCTION = False
 HOST_IP = "85.190.243.96"
 # HOST_IP = "192.168.0.166"
