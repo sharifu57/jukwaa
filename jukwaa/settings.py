@@ -138,7 +138,7 @@ if PRODUCTION == True:
             "NAME": "jukwaa",
             "USER": "jukwaa",
             "PASSWORD": "jukwaa%100",
-            "HOST": "db",
+            "HOST": "172.17.0.1",
             "PORT": "5432",
         }
     }

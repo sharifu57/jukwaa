@@ -5,5 +5,5 @@ RUN mkdir /jukwaa
 WORKDIR /jukwaa
 ADD requirements.txt /jukwaa/
 RUN pip install -r requirements.txt
-EXPOSE 8005
+EXPOSE 8000
 

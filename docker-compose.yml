@@ -1,29 +1,16 @@
-#version: '3.8'
+version: "3.8"
 
 services:
-  db:
-    image: postgres:13
-    restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: jukwaa
-      POSTGRES_USER: jukwaa
-      POSTGRES_PASSWORD: jukwaa%100
-    ports:
-      - "5432:5432"
-
   web:
+    # restart: "always"
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      IP: 127.0.0.1
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    container_name: jukwaa
+    image: jukwaa
+    working_dir: /jukwaa
     volumes:
       - .:/jukwaa
     ports:
-      - "8005:8000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgres://jukwaa:jukwaa%100@db:5432/jukwaa
-
-volumes:
-  postgres_data:
+      - "8000:8000"
