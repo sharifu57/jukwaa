@@ -131,7 +131,7 @@ WSGI_APPLICATION = "jukwaa.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-if PRODUCTION == True:
+if PRODUCTION:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
