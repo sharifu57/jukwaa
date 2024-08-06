@@ -31,7 +31,7 @@ MAINTENANCE_MODE = None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-PRODUCTION = False
+# PRODUCTION = False
 HOST_IP = "85.190.243.96"
 # HOST_IP = "192.168.0.166"
 FRONT_END_ADD = "172.23.176.1"
@@ -129,30 +129,43 @@ WSGI_APPLICATION = "jukwaa.wsgi.application"
 #     "staff.views.UserAuthentication"
 # ]
 
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "jukwaa",
+        "USER": "jukwaa",
+        "PASSWORD": "jukwaa%100",
+        # "HOST": "172.17.0.1",
+        "HOST": HOST_IP,
+        "PORT": "5432",
+    }
+}
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-if PRODUCTION:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "jukwaa",
-            "USER": "jukwaa",
-            "PASSWORD": "jukwaa%100",
-            "HOST": "172.17.0.1",
-            "PORT": "5432",
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "jukwaa",
-            "USER": "jukwaa",
-            "PASSWORD": "jukwaa%100",
-            "HOST": HOST_IP,
-            "PORT": "5432",
-        }
-    }
+# if PRODUCTION:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": "jukwaa",
+#             "USER": "jukwaa",
+#             "PASSWORD": "jukwaa%100",
+#             "HOST": "172.17.0.1",
+#             "PORT": "5432",
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": "jukwaa",
+#             "USER": "jukwaa",
+#             "PASSWORD": "jukwaa%100",
+#             "HOST": HOST_IP,
+#             "PORT": "5432",
+#         }
+#     }
 
 
 # Password validation
