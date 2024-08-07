@@ -137,7 +137,7 @@ DATABASES = {
         "USER": "jukwaa",
         "PASSWORD": "jukwaa%100",
         "HOST": "172.17.0.1",
-        # "HOST": HOST_IP,
+        # "HOST": "172.23.176.1",
         "PORT": "5432",
     }
 }
