@@ -17,14 +17,13 @@ from django.http import HttpResponse
 from django.db.models import Prefetch, Count
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+
 
 # Create your views here.
 
 
 class ProjectStatisticsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         freelancers = Profile.objects.filter(user_type=1).count()
@@ -38,7 +37,6 @@ class ProjectStatisticsAPIView(APIView):
 
 class PostProjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def post(self, request):
         data = request.data
@@ -132,7 +130,6 @@ class PostProjectAPIView(APIView):
 
 class BudgetListAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         budgets = Budget.objects.filter(is_active=True, is_deleted=False)
@@ -142,7 +139,6 @@ class BudgetListAPIView(APIView):
 
 class GetMatchProjectsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, category_id):
         try:
@@ -185,7 +181,6 @@ class GetMatchProjectsAPIView(APIView):
 
 class GetProjectsByUserIdAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, user_id=None):
         try:
@@ -214,7 +209,6 @@ class GetProjectsByUserIdAPIView(APIView):
 
 class ViewOneProjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, pk):
         try:
@@ -230,7 +224,6 @@ class ViewOneProjectAPIView(APIView):
 
 class CreateBidAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def post(self, request):
         data = request.data
@@ -314,7 +307,6 @@ class CreateBidAPIView(APIView):
 
 class ProjectBiddersAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, project_id):
         try:
@@ -338,7 +330,6 @@ class ProjectBiddersAPIView(APIView):
 
 class GetProjectsByCategoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, *args, **kwargs):
         categories_with_projects_and_profiles = Category.objects.annotate(
@@ -365,7 +356,6 @@ class GetProjectsByCategoryAPIView(APIView):
 
 class GetAllProjectsAPiView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         projects = Project.objects.filter(
@@ -387,7 +377,6 @@ class GetAllProjectsAPiView(APIView):
 
 class GetAllProjectsListAPiView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         projects = Project.objects.filter(
@@ -426,7 +415,6 @@ class GetAllProjectsListAPiView(APIView):
 
 class ProjectChatAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         projects = Project.objects.filter(is_active=True, is_deleted=False)[:10]
@@ -434,7 +422,6 @@ class ProjectChatAPIView(APIView):
         return Response(serializer.data)
 class AdminStatisticsDashboardAPiView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         projects = Project.objects.all()
@@ -452,7 +439,6 @@ class AdminStatisticsDashboardAPiView(APIView):
 
 class ProjectStatisticsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         projects = Project.objects.filter(is_active=True, is_deleted=False)
@@ -476,7 +462,6 @@ class ProjectStatisticsAPIView(APIView):
 # handle all the payment logics
 class CreatePaymentAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def post(self, request):
         data = request.body
@@ -491,7 +476,6 @@ class CreatePaymentAPIView(APIView):
 
 class GetOneProjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, project_id):
         try:
@@ -533,7 +517,6 @@ class GetOneProjectAPIView(APIView):
 
 class UpdateProjectStatusAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def put(self, request, projectId):
         try:
@@ -557,7 +540,6 @@ class UpdateProjectStatusAPIView(APIView):
 
 class UserTotalPostedProjectsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, user_id):
         try:
@@ -571,7 +553,6 @@ class UserTotalPostedProjectsAPIView(APIView):
 
 class GetProjectBiddersAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, project_id=None):
         try:
@@ -586,7 +567,6 @@ class GetProjectBiddersAPIView(APIView):
 
 class GetAllDurationsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         durations = Duration.objects.filter(is_active=True, is_deleted=False)
@@ -595,7 +575,6 @@ class GetAllDurationsAPIView(APIView):
 
 class GetMyBidsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request, bidder_id):
         try:
@@ -613,7 +592,6 @@ class GetMyBidsAPIView(APIView):
     
 class GetMyProjectsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
     
     def get(self, request, user_id):
         try:
@@ -639,7 +617,6 @@ class ProjectPagination(PageNumberPagination):
 
 class SystemProjectsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def get(self, request):
         projects = Project.objects.filter(
@@ -655,8 +632,6 @@ class SystemProjectsAPIView(APIView):
 
 class getRecentProjectsAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
-
     def get(self, request):
         projects = Project.objects.filter(
             is_active=True,
@@ -669,7 +644,6 @@ class getRecentProjectsAPIView(APIView):
 
 class UpdateProjectStatusAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [OAuth2Authentication]
 
     def put(self, request, project_id, project_status):
         try:
