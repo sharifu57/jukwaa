@@ -340,6 +340,8 @@ class RegenerateExpiredOTPAPIView(APIView):
 
 
 class CategoriesListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         categories = Category.objects.filter(is_active=True, is_deleted=False).order_by(
             "name"
@@ -348,6 +350,8 @@ class CategoriesListAPIView(APIView):
         return Response(serializer.data)
 
 class SkillsListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, category_id):
         try:
             category = Category.objects.get(id=category_id)
@@ -363,6 +367,8 @@ class SkillsListAPIView(APIView):
 
 
 class GetLocationsAPiView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         locations = Location.objects.filter(is_active=True, is_deleted=False)
         serializer = LocationSerializer(locations, many=True)
@@ -375,6 +381,8 @@ class GetLocationsAPiView(APIView):
 
 
 class GetAllUsersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         users = User.objects.filter(is_active=True).order_by('-last_login')
         serializer = UserSerializer(users, many=True)
@@ -388,6 +396,8 @@ class GetAllUsersAPIView(APIView):
 
 
 class AllTeamAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         teams = Team.objects.filter(is_active=True)
         serializer = TeamSerializer(teams, many=True)
@@ -395,6 +405,8 @@ class AllTeamAPIView(APIView):
 
 
 class GetCompaniesLogoAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         employers = Employer.objects.filter(is_active=True, is_deleted=False)
         serializer = EmployersLogoSerializer(employers, many=True)
@@ -402,6 +414,8 @@ class GetCompaniesLogoAPIView(APIView):
 
 
 class GetExperienceAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         experiences = Experience.objects.filter(is_active=True, is_deleted=False)
         serializer = ExperienceSerializer(experiences, many=True)
@@ -409,6 +423,8 @@ class GetExperienceAPIView(APIView):
 
 
 class GetUserDetailsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, user_id=None):
         try:
             user = User.objects.get(id=user_id)
@@ -420,6 +436,8 @@ class GetUserDetailsAPIView(APIView):
 
 
 class UpdateUserProfileImageAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def patch(self, request, user_id=None):
         data = request.data
         user_image = data.get('profile_image')

@@ -22,6 +22,8 @@ from rest_framework.pagination import PageNumberPagination
 
 
 class ProjectStatisticsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         freelancers = Profile.objects.filter(user_type=1).count()
         employers = Profile.objects.filter(user_type=2).count()
@@ -33,6 +35,8 @@ class ProjectStatisticsAPIView(APIView):
 
 
 class PostProjectAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         data = request.data
 
@@ -124,6 +128,8 @@ class PostProjectAPIView(APIView):
 
 
 class BudgetListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         budgets = Budget.objects.filter(is_active=True, is_deleted=False)
         serializer = BudgetSerializer(budgets, many=True)
@@ -131,6 +137,8 @@ class BudgetListAPIView(APIView):
 
 
 class GetMatchProjectsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, category_id):
         try:
             category = Category.objects.get(id=category_id)
@@ -171,6 +179,8 @@ class GetMatchProjectsAPIView(APIView):
 
 
 class GetProjectsByUserIdAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, user_id=None):
         try:
             user = User.objects.get(id=user_id)
@@ -197,6 +207,8 @@ class GetProjectsByUserIdAPIView(APIView):
 
 
 class ViewOneProjectAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         try:
             project = Project.objects.get(id=pk)
@@ -210,6 +222,8 @@ class ViewOneProjectAPIView(APIView):
 
 
 class CreateBidAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         data = request.data
 
@@ -291,6 +305,8 @@ class CreateBidAPIView(APIView):
 
 
 class ProjectBiddersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, project_id):
         try:
             project = Project.objects.get(id=project_id)
@@ -312,6 +328,8 @@ class ProjectBiddersAPIView(APIView):
 
 
 class GetProjectsByCategoryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         categories_with_projects_and_profiles = Category.objects.annotate(
             projects_count=Count('project', distinct=True),
@@ -336,6 +354,8 @@ class GetProjectsByCategoryAPIView(APIView):
 
 
 class GetAllProjectsAPiView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         projects = Project.objects.filter(
             is_active=True, 
@@ -355,6 +375,8 @@ class GetAllProjectsAPiView(APIView):
 
 
 class GetAllProjectsListAPiView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         projects = Project.objects.filter(
             is_active=True, is_deleted=False, status=3
@@ -391,11 +413,15 @@ class GetAllProjectsListAPiView(APIView):
 
 
 class ProjectChatAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         projects = Project.objects.filter(is_active=True, is_deleted=False)[:10]
         serializer = ProjectsListSerializer(projects, many=True)
         return Response(serializer.data)
 class AdminStatisticsDashboardAPiView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         projects = Project.objects.all()
         freelancers = Profile.objects.filter(user_type=1)
@@ -411,6 +437,8 @@ class AdminStatisticsDashboardAPiView(APIView):
 
 
 class ProjectStatisticsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         projects = Project.objects.filter(is_active=True, is_deleted=False)
 
@@ -432,6 +460,8 @@ class ProjectStatisticsAPIView(APIView):
 
 # handle all the payment logics
 class CreatePaymentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         data = request.body
         # print("==============data", data)
@@ -444,6 +474,8 @@ class CreatePaymentAPIView(APIView):
 # end the handling of the payment logics
 
 class GetOneProjectAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, project_id):
         try:
             project = Project.objects.get(id=project_id)
@@ -483,6 +515,8 @@ class GetOneProjectAPIView(APIView):
 
 
 class UpdateProjectStatusAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def put(self, request, projectId):
         try:
             project = Project.objects.get(id=projectId)
@@ -504,6 +538,8 @@ class UpdateProjectStatusAPIView(APIView):
             return Response({'status': 400, 'message': 'Invalid Status Input'})
 
 class UserTotalPostedProjectsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, user_id):
         try:
             user = User.objects.get(id=user_id)
@@ -515,6 +551,8 @@ class UserTotalPostedProjectsAPIView(APIView):
 
 
 class GetProjectBiddersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, project_id=None):
         try:
             project = Project.objects.get(id=project_id)
@@ -527,12 +565,16 @@ class GetProjectBiddersAPIView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class GetAllDurationsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         durations = Duration.objects.filter(is_active=True, is_deleted=False)
         serializer = DurationSerializer(durations, many=True)
         return Response(serializer.data)
 
 class GetMyBidsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, bidder_id):
         try:
             user = User.objects.get(id=bidder_id)
@@ -548,6 +590,7 @@ class GetMyBidsAPIView(APIView):
         return Response(serializer.data)
     
 class GetMyProjectsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     
     def get(self, request, user_id):
         try:
@@ -572,6 +615,8 @@ class ProjectPagination(PageNumberPagination):
 
 
 class SystemProjectsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         projects = Project.objects.filter(
             is_active=True,
@@ -597,6 +642,8 @@ class getRecentProjectsAPIView(APIView):
         return Response({'status': status.HTTP_200_OK, 'data': serializer.data})
 
 class UpdateProjectStatusAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def put(self, request, project_id, project_status):
         try:
             project = Project.objects.filter(
