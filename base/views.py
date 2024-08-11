@@ -142,30 +142,17 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
 
 class LoginAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        print("=========start user login")
-        print(request.data)
-        print("========end user login")
         email_or_username = request.data.get("email", "").strip()
         password = request.data.get("password", "").strip()
 
-        print("=================username and password")
-        print(email_or_username)
-        print(password)
-        print("=================end email and password")
-
         # Try to fetch the user by email or username
         user = User.objects.filter(Q(email=email_or_username) | Q(username=email_or_username)).first()
-
-        print("=============user")
-        print(user)
-        print("=============end user")
 
         if user:
             # Attempt to authenticate the user
             auth_user = authenticate(username=user.username, password=password)
 
             if auth_user:
-                print("=========there is user here")
                 refresh = RefreshToken.for_user(user)
                 serializer = VerificationSerializer(user)  # Ensure this serializer is correctly implemented
 
@@ -437,7 +424,7 @@ class GetUserDetailsAPIView(APIView):
 
 class UpdateUserProfileImageAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def patch(self, request, user_id=None):
         data = request.data
         user_image = data.get('profile_image')
