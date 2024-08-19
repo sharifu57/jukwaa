@@ -118,11 +118,15 @@ class PostProjectAPIView(APIView):
                         "status": 201,
                         "message": "project created(Wait for Approval)",
                         "data": serializer.data,
-                        # "payment": payment
                     }
                 )
             except Exception as e:
-                return
+                return Response(
+                    {
+                        "status": 200,
+                        "message": "Failed to create project with Error: {e}",
+                    }
+                )
 
         except Exception as e:
             return Response({"status": 400, "message": f"Failed to Create: {e}"})
