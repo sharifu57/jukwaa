@@ -327,8 +327,6 @@ class RegenerateExpiredOTPAPIView(APIView):
 
 
 class CategoriesListAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
         categories = Category.objects.filter(is_active=True, is_deleted=False).order_by(
             "name"
