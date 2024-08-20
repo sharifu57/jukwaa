@@ -28,7 +28,8 @@ PROJECT_STATUS = (
     (4, "Rejected"),
     (5, "On Going"),
     (6, "Completed"),
-    (7, "Closed")
+    (7, "Closed"),
+    (8, "Returned"),
 )
 
 PAYMENT_STATUS = (
