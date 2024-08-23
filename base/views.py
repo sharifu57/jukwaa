@@ -56,8 +56,8 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         last_name = request.data.get("lastName")
         user_type = request.data.get("userType")
         category = request.data.get("category")
+        is_accepted_term = request.data.get("is_accepted_term")
         phone_number = request.data.get("phoneNumber")
-        # is_accepted_term = request.data.get("is_accepted_term")
         password = request.data.get("password")
         
 
@@ -122,7 +122,7 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
             pass
 
         user_profile.phone_number = phone_number
-        user_profile.is_accepted_term = True
+        user_profile.is_accepted_term = is_accepted_term
         user_profile.otp = get_otp_number()
 
         category_instance = Category.objects.get(pk=category)
@@ -134,7 +134,6 @@ class UserRegisterViewSet(viewsets.GenericViewSet):
         user_profile.save()
         serializer = RegisterResponseSerializer(user)
 
-        print("-------testing end end end")
         return Response(
             {"status": status.HTTP_201_CREATED, "message": "Successfully Created", "data": serializer.data}, status.HTTP_201_CREATED
         )
