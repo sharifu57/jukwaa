@@ -730,3 +730,16 @@ class UpdateProjectStatusAPIView(APIView):
                 }
             )
 
+class AllProjectsAPIView(APIView):
+
+    def get(self, request):
+        projects = Project.objects.filter(
+            is_active=True,
+            is_deleted=False,
+        ).order_by('-created')
+
+        paginator = ProjectPagination()
+        paginated_projects = paginator.paginate_queryset(projects, request)
+        serializer = ProjectsListSerializer(paginated_projects, many=True)
+
+        return paginator.get_paginated_response(serializer.data)

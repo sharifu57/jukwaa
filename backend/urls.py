@@ -112,4 +112,9 @@ urlpatterns = [
         UpdateProjectStatusAPIView.as_view(),
         name="update_project_status"
     ),
+    path(
+        'all_projects/',
+        AllProjectsAPIView.as_view(),
+        name="all_projects"
+    )
 ]
